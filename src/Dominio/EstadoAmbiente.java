@@ -3,6 +3,9 @@ package Dominio;
 import Auxiliares.Aleatorio;
 import frsf.cidisi.faia.state.EnvironmentState;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EstadoAmbiente extends EnvironmentState {
 
     private int[][] tablero;
@@ -55,14 +58,13 @@ public class EstadoAmbiente extends EnvironmentState {
         this.zombies = zombies;
     }
 
-
     /**
-     * This method is used to setup the initial real tablero.
+     * Este método es para inicializar el tablero real
      */
     @Override
     public void initState() {
 
-        // Sets all cells as empty
+        // Se setean las celdas como vacías (con 0)
         for (int row = 0; row < tablero.length; row++) {
             for (int col = 0; col < tablero.length; col++) {
                 tablero[row][col] = Percepcion.EMPTY_PERCEPTION;
@@ -132,32 +134,75 @@ public class EstadoAmbiente extends EnvironmentState {
         return str;
     }
 
-    public int getCeldaArriba(Posicion pos) {
+    public List<Integer> getCeldasArriba(Posicion pos) {
         if (pos.getFila() == 0) {
-            return -1;  //limite del tablero
+            return null;  //límite del tablero
         }
-        return tablero[pos.getFila() - 1][pos.getColumna()];
+        List<Integer> celdas = new ArrayList<>();
+        int celda;
+        do{
+            pos.setFila(pos.getFila()-1);
+            celda = tablero[pos.getFila()][pos.getColumna()];
+            celdas.add(celda);
+            if(celda != 0) {
+                return celdas;
+            }
+        }
+        while(pos.getFila() != 0);
+        return celdas;
     }
 
-    public int getCeldaIzq(Posicion pos) {
+    public List<Integer> getCeldasIzq(Posicion pos) {
         if (pos.getColumna() == 0) {
-            return -1;  //limite del tablero
+            return null;  //límite del tablero
         }
-        return tablero[pos.getFila()][pos.getColumna() - 1];
+        List<Integer> celdas = new ArrayList<>();
+        int celda;
+        do{
+            pos.setColumna(pos.getColumna()-1);
+            celda = tablero[pos.getFila()][pos.getColumna()];
+            celdas.add(celda);
+            if(celda != 0) {
+                return celdas;
+            }
+        }
+        while(pos.getColumna() != 0);
+        return celdas;
     }
 
-    public int getCeldaDer(Posicion pos) {
-        if (pos.getColumna() == 8) {
-            return -1;  //limite del tablero
-        }
-        return tablero[pos.getFila()][pos.getColumna() + 1];
-    }
-
-    public int getCeldaAbajo(Posicion pos) {
+    public List<Integer> getCeldasAbajo(Posicion pos) {
         if (pos.getFila() == 4) {
-            return -1;  //limite del tablero
+            return null;  //límite del tablero
         }
-        return tablero[pos.getFila() + 1][pos.getColumna()];
+        List<Integer> celdas = new ArrayList<>();
+        int celda;
+        do{
+            pos.setFila(pos.getFila()+1);
+            celda = tablero[pos.getFila()][pos.getColumna()];
+            celdas.add(celda);
+            if(celda != 0) {
+                return celdas;
+            }
+        }
+        while(pos.getFila() != 4);
+        return celdas;
     }
 
+    public List<Integer> getCeldasDer(Posicion pos) {
+        if (pos.getFila() == 8) {
+            return null;  //límite del tablero
+        }
+        List<Integer> celdas = new ArrayList<>();
+        int celda;
+        do{
+            pos.setColumna(pos.getColumna()+1);
+            celda = tablero[pos.getFila()][pos.getColumna()];
+            celdas.add(celda);
+            if(celda != 0) {
+                return celdas;
+            }
+        }
+        while(pos.getColumna() != 8);
+        return celdas;
+    }
 }

@@ -5,6 +5,8 @@ import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
 import frsf.cidisi.faia.state.EnvironmentState;
 
+import java.util.List;
+
 public class Ambiente extends Environment{
 
     public Ambiente() {
@@ -18,33 +20,34 @@ public class Ambiente extends Environment{
     }
 
     /**
-     * This method is called by the simulator. Given the Agent, it creates
-     * a new perception reading, for example, the agent position.
-     * @return A perception that will be given to the agent by the simulator.
+     * Este método es invocado por el simulador. Dado el agente, este crea
+     * una nueva percepción leyendo, por ejemplo, la posición del agente.
+     * @return Una percepción que el simulador entregará al agente
      */
     @Override
     public Perception getPercept() {
         //Actualizar posición de los zombies
         moverZombies();
 
-        // Create a new perception to return
+        // Nueva percepción
         Percepcion perception = new Percepcion();
 
-        // Get the actual position of the agent to be able to create the
-        // perception
+        //Obtener la posición real del agente para poder crear la percepción
         Posicion pos = this.getEnvironmentState().getPosicionPlanta();
-                // Set the perception sensors
-        perception.setSensorArriba(this.getCeldaArriba(pos));
-        perception.setSensorIzq(this.getCeldaIzq(pos));
-        perception.setSensorDer(this.getCeldaDer(pos));
-        perception.setSensorAbajo(this.getCeldaAbajo(pos));
+        // Configurar los sensores de percepción
+        perception.setSensorArriba(this.getCeldasArriba(pos));
+        perception.setSensorIzq(this.getCeldasIzq(pos));
+        perception.setSensorDer(this.getCeldasDer(pos));
+        perception.setSensorAbajo(this.getCeldasAbajo(pos));
 
-        // Return the perception
+        // Devuelve la percepción
         return perception;
     }
 
     private void moverZombies() {
         int[][] tablero = ((EstadoAmbiente)this.environmentState).getTablero();
+
+        //falta
 
     }
 
@@ -76,23 +79,23 @@ public class Ambiente extends Environment{
     }
 
 
-    public int getCeldaArriba(Posicion pos) {
+    public List<Integer> getCeldasArriba(Posicion pos) {
         return ((EstadoAmbiente) this.environmentState)
-                .getCeldaArriba(pos);
+                .getCeldasArriba(pos);
     }
 
-    public int getCeldaIzq(Posicion pos) {
+    public List<Integer> getCeldasIzq(Posicion pos) {
         return ((EstadoAmbiente) this.environmentState)
-                .getCeldaIzq(pos);
+                .getCeldasIzq(pos);
     }
 
-    public int getCeldaDer(Posicion pos) {
+    public List<Integer> getCeldasDer(Posicion pos) {
         return ((EstadoAmbiente) this.environmentState)
-                .getCeldaDer(pos);
+                .getCeldasDer(pos);
     }
 
-    public int getCeldaAbajo(Posicion pos) {
+    public List<Integer> getCeldasAbajo(Posicion pos) {
         return ((EstadoAmbiente) this.environmentState)
-                .getCeldaAbajo(pos);
+                .getCeldasAbajo(pos);
     }
 }

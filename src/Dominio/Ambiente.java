@@ -45,10 +45,7 @@ public class Ambiente extends Environment{
     }
 
     private void moverZombies() {
-        int[][] tablero = ((EstadoAmbiente)this.environmentState).getTablero();
-
-        //falta
-
+        ((EstadoAmbiente)this.environmentState).moverZombies();
     }
 
     @Override

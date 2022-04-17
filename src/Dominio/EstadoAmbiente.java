@@ -114,6 +114,25 @@ public class EstadoAmbiente extends EnvironmentState {
         }
     }
 
+    public void moverZombies(){
+        for(Zombie zombie: zombies){
+            //Si debe moverse en este ciclo de percepción ingresa
+            if(zombie.getProxMov() == 0) {
+                //Configuro el contador del proximo movimiento
+                zombie.setProxMov(Aleatorio.nroRandom(0,3));
+                Posicion posZombie = zombie.getPosicion();
+                //Si la posición siguiente (posición adyacente izquierda) no está ocupada por otro zombie, avanza
+                if (this.getTablero()[posZombie.getFila()][posZombie.getColumna() - 1] >= 0) {
+                    posZombie.setColumna(posZombie.getColumna() - 1);
+                    zombie.setPosicion(posZombie);
+                }
+            }
+            //Disminuyo en 1 el contador
+            else
+                zombie.setProxMov(zombie.getProxMov()-1);
+        }
+    }
+
     /**
      * Representacion del tablero real
      */

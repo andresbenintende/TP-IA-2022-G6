@@ -80,7 +80,7 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     private void inicializarPlanta() {
-        this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(0, 4),1));
+        this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(0, 4),0));
         this.setSolesPlanta(Aleatorio.nroRandom(2,20));
         this.tablero[posicionPlanta.getFila()][posicionPlanta.getColumna()] = this.getSolesPlanta();
     }
@@ -107,7 +107,6 @@ public class EstadoAmbiente extends EnvironmentState {
                 }
                 else {
                     posicion.setColumna(posicion.getColumna() + 1);
-
                 }
                 zombie.setPosicion(posicion);
             }

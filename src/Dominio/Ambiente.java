@@ -71,10 +71,8 @@ public class Ambiente extends Environment{
             if(zombie.getPosicion().getColumna() < 0)
                 return true;
         }
-
         return false;
     }
-
 
     public List<Integer> getCeldasArriba(Posicion pos) {
         return ((EstadoAmbiente) this.environmentState)

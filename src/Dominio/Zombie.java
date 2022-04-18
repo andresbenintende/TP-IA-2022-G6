@@ -13,6 +13,18 @@ public class Zombie {
         this.proxMov = Aleatorio.nroRandom(0,3);
     }
 
+    /**
+     * This method will return a true if the postion passed is the same where de zoombie is
+     * @param fila
+     * @param columna
+     * @return boolean
+     */
+    public boolean checkPosicion(int fila, int columna){
+        if(this.getPosicion().getColumna()==columna && this.getPosicion().getFila()==fila){
+            return true;
+        }
+        return  false;
+    }
     public Posicion getPosicion() {
         return posicion;
     }

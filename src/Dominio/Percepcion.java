@@ -52,39 +52,30 @@ public class Percepcion extends Perception {
     public List<Integer> getSensorIzq() {
         return sensorIzq;
     }
-
     public void setSensorIzq(List<Integer> sensorIzq) {
         this.sensorIzq = sensorIzq;
     }
-
     public List<Integer> getSensorArriba() {
         return sensorArriba;
     }
-
     public void setSensorArriba(List<Integer> sensorArriba) {
         this.sensorArriba = sensorArriba;
     }
-
     public List<Integer> getSensorDer() {
         return sensorDer;
     }
-
     public void setSensorDer(List<Integer> sensorDer) {
         this.sensorDer = sensorDer;
     }
-
     public List<Integer> getSensorAbajo() {
         return sensorAbajo;
     }
-
     public void setSensorAbajo(List<Integer> sensorAbajo) {
         this.sensorAbajo = sensorAbajo;
     }
-
     public int getEnergiaSoles() {
         return energiaSoles;
     }
-
     public void setEnergiaSoles(int energiaSoles) {
         this.energiaSoles = energiaSoles;
     }

@@ -3,14 +3,18 @@ package Dominio;
 import Auxiliares.Aleatorio;
 import frsf.cidisi.faia.state.EnvironmentState;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EstadoAmbiente extends EnvironmentState {
 
     private int[][] tablero;
-    private Zombie[] zombies;
+    private List<Zombie> zombies;
     private Posicion posicionPlanta;
+    private List<Girasol> girasoles;
     private int solesPlanta;
 
     public EstadoAmbiente(int[][] m) {
@@ -25,37 +29,35 @@ public class EstadoAmbiente extends EnvironmentState {
     public int[][] getTablero() {
         return tablero;
     }
-
     public void setTablero(int[][] tablero) {
         this.tablero = tablero;
     }
-
     public void setTablero(int row, int col, int value) {
         this.tablero[row][col] = value;
     }
-
     public Posicion getPosicionPlanta() {
         return posicionPlanta;
     }
-
     public void setPosicionPlanta(Posicion posicionPlanta) {
         this.posicionPlanta = posicionPlanta;
     }
-
     public int getSolesPlanta() {
         return solesPlanta;
     }
-
     public void setSolesPlanta(int solesPlanta) {
         this.solesPlanta = solesPlanta;
     }
-
-    public Zombie[] getZombies() {
+    public List<Zombie> getZombies() {
         return zombies;
     }
-
-    public void setZombies(Zombie[] zombies) {
+    public void setZombies(List<Zombie> zombies) {
         this.zombies = zombies;
+    }
+    public List<Girasol> getGirasoles() {
+        return girasoles;
+    }
+    public void setGirasoles(List<Girasol> girasoles) {
+        this.girasoles = girasoles;
     }
 
     /**
@@ -80,8 +82,13 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     private void inicializarPlanta() {
+        //Setear posicion random de la planta
         this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(0, 4),0));
+
+        //Setear cant soles random de la planta
         this.setSolesPlanta(Aleatorio.nroRandom(2,20));
+
+        //Guardamos la posicion de la planta en el tablero
         this.tablero[posicionPlanta.getFila()][posicionPlanta.getColumna()] = this.getSolesPlanta();
     }
 
@@ -97,6 +104,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
             Posicion posicion = new Posicion(Aleatorio.nroRandom(0,4), 8);
 
+            //
             if(tablero[posicion.getFila()][posicion.getColumna()] < 0){
                 posicion.setColumna(posicion.getColumna() + 1);
             }
@@ -122,6 +130,11 @@ public class EstadoAmbiente extends EnvironmentState {
                 Posicion posZombie = zombie.getPosicion();
                 //Si la posición siguiente (posición adyacente izquierda) no está ocupada por otro zombie, avanza
                 if (this.getTablero()[posZombie.getFila()][posZombie.getColumna() - 1] >= 0) {
+
+                        //Si en esa posicion hay un girasol lo elimina
+                        if(this.getTablero()[posZombie.getFila()][posZombie.getColumna() - 1] > 0){
+                            quitarSoles(posZombie.getFila(),posZombie.getColumna() - 1);
+                        }
                     posZombie.setColumna(posZombie.getColumna() - 1);
                     zombie.setPosicion(posZombie);
                 }
@@ -132,6 +145,18 @@ public class EstadoAmbiente extends EnvironmentState {
         }
     }
 
+    private void quitarSoles(int fila, int columna) {
+        //Se encuentra un girasol
+        Girasol girasolMuerto= this.girasoles.stream().filter(girasol -> girasol.checkPosicion(fila,columna)).findFirst().get();
+        this.girasoles.remove(girasolMuerto);
+    }
+
+    public void generarSolesGirasol(){
+        for (Girasol girasol : girasoles){
+            girasol.setCantSoles(girasol.getCantSoles()+Aleatorio.nroRandom(1,3));
+        }
+
+    }
     /**
      * Representacion del tablero real
      */

@@ -29,6 +29,9 @@ public class Ambiente extends Environment{
         //Actualizar posición de los zombies
         moverZombies();
 
+        //Generar soles-girasol
+        generarSolesGirasol();
+
         // Nueva percepción
         Percepcion perception = new Percepcion();
 
@@ -42,6 +45,10 @@ public class Ambiente extends Environment{
 
         // Devuelve la percepción
         return perception;
+    }
+
+    private void generarSolesGirasol() {
+        ((EstadoAmbiente)this.environmentState).generarSolesGirasol();
     }
 
     private void moverZombies() {

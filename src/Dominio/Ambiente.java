@@ -68,7 +68,6 @@ public class Ambiente extends Environment{
 
         int energiaPlanta = estadoAmbiente.getSolesPlanta();
 
-        
         // Si la planta se queda sin energía, entonces falla
         if (energiaPlanta <= 0)
             return true;

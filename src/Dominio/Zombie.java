@@ -10,11 +10,11 @@ public class Zombie {
     public Zombie(Posicion posicion, int poder) {
         this.posicion = posicion;
         this.poder = poder;
-        this.proxMov = Aleatorio.nroRandom(0,3);
+        this.proxMov = Aleatorio.nroRandom(0,2);
     }
 
     /**
-     * This method will return a true if the postion passed is the same where de zoombie is
+     * This method will return a true if the position passed is the same where de zombie is
      * @param fila
      * @param columna
      * @return boolean

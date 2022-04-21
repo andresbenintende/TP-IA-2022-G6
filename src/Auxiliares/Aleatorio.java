@@ -13,5 +13,4 @@ public class Aleatorio {
         Random random = new Random();
         return random.nextBoolean();
     }
-
 }

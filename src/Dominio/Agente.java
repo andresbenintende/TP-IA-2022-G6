@@ -21,6 +21,7 @@ public class Agente extends SearchBasedAgent {
 
         // Estado del agente
         EstadoAgente estadoAgente = new EstadoAgente();
+
         this.setAgentState(estadoAgente);
 
         // Creación de los operadores

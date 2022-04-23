@@ -12,23 +12,25 @@ import java.util.List;
 public class EstadoAgente extends SearchBasedAgentState {
 
     private int[][] tablero;
-    private List<Zombie> zombies;
     private Posicion posicion;
+    private int cantZombies;
+    private List<Zombie> zombies;
     private List<Girasol> girasoles;
     private int soles;
 
-    public EstadoAgente(int[][] t, Posicion p, int s, List<Girasol> g, List<Zombie> z) {
+    public EstadoAgente(int[][] t, Posicion p, int c, List<Zombie> z, List<Girasol> g, int s) {
         tablero = t;
         posicion = p;
-        soles = s;
+        cantZombies = c;
         zombies = z;
         girasoles = g;
-
+        soles = s;
     }
 
     public EstadoAgente() {
         tablero = new int[5][9];
         posicion = new Posicion(1,3);
+        cantZombies = 5;
         soles = 5;
         this.initState();
     }
@@ -46,18 +48,14 @@ public class EstadoAgente extends SearchBasedAgentState {
                 nuevoTablero[row][col] = tablero[row][col];
             }
         }
-
-        Posicion nuevaPosicion = new Posicion(posicion.getFila(),posicion.getColumna());
+        List<Zombie> nuevosZombies = new ArrayList<>();
+        nuevosZombies = zombies;
 
         List<Girasol> nuevosGirasoles = new ArrayList<>();
         nuevosGirasoles = girasoles;
 
-        List<Zombie> nuevosZombies = new ArrayList<>();
-        nuevosZombies = zombies;
-
-
         EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero,
-                nuevaPosicion, this.soles, nuevosGirasoles, nuevosZombies);
+                this.getPosicion(), this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
 
         return nuevoEstado;
     }
@@ -70,48 +68,152 @@ public class EstadoAgente extends SearchBasedAgentState {
     public void updateState(Perception p) {
         Percepcion percepcion = (Percepcion) p;
 
-        int row = this.getRowPosition();
-        int col = this.getColumnPosition();
+        //Actualizar sensores
+        //Actualizo sensor de arriba
+        for(int i = 0; i < percepcion.getSensorArriba().size(); i++){
+            Integer valorCelda = percepcion.getSensorArriba().get(i);
+            Posicion posicion = new Posicion(this.getFila()-(i+1), this.getColumna());
 
-        if (col == 0) {
-            col = 3;
-        } else {
-            col = col - 1;
+            actualizarSensoresVerticales(posicion,valorCelda);
         }
-        tablero[row][col] = pacmanPerception.getLeftSensor();
 
-        row = this.getRowPosition();
-        col = this.getColumnPosition();
+        //Actualizo sensor de abajo
+        for(int i = 0; i < percepcion.getSensorAbajo().size(); i++){
+            Integer valorCelda = percepcion.getSensorArriba().get(i);
+            Posicion posicion = new Posicion(this.getFila()+(i+1), this.getColumna());
 
-        if (col == 3) {
-            col = 0;
-        } else {
-            col = col + 1;
+            actualizarSensoresVerticales(posicion,valorCelda);
         }
-        tablero[row][col] = pacmanPerception.getRightSensor();
 
-        row = this.getRowPosition();
-        col = this.getColumnPosition();
+        //Actualizo sensor de la derecha
+        for(int i = 0; i < percepcion.getSensorDer().size(); i++){
+            Integer valorCelda = percepcion.getSensorArriba().get(i);
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna()+(i+1));
 
-        if (row == 0) {
-            row = 3;
-        } else {
-            row = row - 1;
+            actualizarSensorDer(posicion,valorCelda);
         }
-        tablero[row][col] = pacmanPerception.getTopSensor();
 
+        //Actualizo sensor de la izquierda
+        for(int i = 0; i < percepcion.getSensorIzq().size(); i++){
+            Integer valorCelda = percepcion.getSensorArriba().get(i);
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna()-(i+1));
 
-        row = this.getRowPosition();
-        col = this.getColumnPosition();
-
-        if (row == 3) {
-            row = 0;
-        } else {
-            row = row + 1;
+            actualizarSensorIzq(posicion,valorCelda);
         }
-        tablero[row][col] = pacmanPerception.getBottomSensor();
 
-        energy = pacmanPerception.getEnergy();
+
+
+        soles = percepcion.getEnergiaSoles();
+    }
+
+
+    /**
+     * Funcion genérica para analizar los sensores de arriba y abajo,
+     * Ya que el comportamiento de ambos es similar
+     * @param posicion
+     * @param valorCelda
+     */
+    private void actualizarSensoresVerticales(Posicion posicion, Integer valorCelda) {
+        int valorTablero = this.tablero[posicion.getFila()][posicion.getColumna()];
+
+        if(valorTablero != valorCelda) {
+            if(valorCelda > 0){
+                actualizarListaGirasol(posicion, valorCelda);
+            }
+
+            if(valorCelda == 0){
+                if(valorTablero > 0){
+                    this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicion);
+                }
+                else{
+
+                }
+            }
+
+            if(valorCelda < =0)
+
+        }
+
+        if(valorCelda != 0){
+            //Zombie
+            if(valorCelda < 0){
+                actualizarListaZombie(posicion, valorCelda);
+            }
+            //Girasol
+            if(valorCelda > 0){
+                actualizarListaGirasol(posicion, valorCelda);
+            }
+        }
+        else{
+            //Si en el tablero figura que tenía un zombie, entonces el zombie avanzó
+            if(this.tablero[posicion.getFila()][posicion.getColumna()] < 0) {
+                actualizarListaZombie(posicion, valorCelda);
+                //"Muevo" el zombie dentro del tablero
+                this.tablero[posicion.getFila()][posicion.getColumna()-1] = this.tablero[posicion.getFila()][posicion.getColumna()];
+            }
+
+            if(this.tablero[posicion.getFila()][posicion.getColumna()] > 0) {
+                this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicion);
+            }
+        }
+        //Actualizo el valor del tablero
+        this.tablero[posicion.getFila()][posicion.getColumna()] = valorCelda;
+
+    }
+
+    private void actualizarSensorDer(Posicion posicion, Integer valorCelda) {
+        if(valorCelda != 0){
+            //Zombie
+            if(valorCelda < 0){
+                actualizarListaZombie(posicion, valorCelda);
+            }
+            //Girasol
+            if(valorCelda > 0){
+                actualizarListaGirasol(posicion, valorCelda);
+            }
+        }
+    }
+    private void actualizarSensorIzq(Posicion posicion, Integer valorCelda) {
+
+    }
+
+
+    private void actualizarListaGirasol(Posicion posicion, Integer valorCelda) {
+        this.girasoles.stream().filter(girasol -> girasol.getPosicion() == posicion).findFirst().get().setCantSoles(valorCelda);
+    }
+
+    private void actualizarListaZombie(Posicion posicion, Integer valorCelda) {
+        //Si en la posicion tenía registrado un girasol, entonces el zombie lo eliminó
+        if(hayGirasol(posicion)){
+            this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicion);
+        }
+
+        //Si en la posición tenía registrado un zombie, quiere decir que se movió,
+        //por lo tanto registramos un movimiento ficticio, para no perder el rastro del zombie
+        if(hayZombie(posicion)){
+            Posicion posicionAux = new Posicion(posicion.getFila(), posicion.getColumna()-1);
+            this.zombies.stream().filter(zombie -> zombie.getPosicion() == posicion).findFirst().get().setPosicion(posicionAux);
+        }
+        //En la posición no tenía registrado un zombie, por lo tanto lo agrego a la lista
+        else {
+            this.zombies.add(new Zombie(posicion, valorCelda));
+        }
+    }
+
+    private boolean hayZombie(Posicion posicion) {
+        for(Zombie zombie : this.zombies){
+            if(zombie.getPosicion() == posicion)
+                return true;
+        }
+        return false;
+    }
+
+    private boolean hayGirasol(Posicion posicion) {
+        for(Girasol girasol : this.girasoles){
+            if(girasol.getPosicion() == posicion)
+                return true;
+        }
+        return false;
     }
 
     /**
@@ -125,8 +227,8 @@ public class EstadoAgente extends SearchBasedAgentState {
             }
         }
 
-        this.setRowPosition(1);
-        this.setColumnPosition(1);
+        this.setFila(1);
+        this.setColumna(1);
 
         this.setSoles(50);
     }
@@ -138,7 +240,7 @@ public class EstadoAgente extends SearchBasedAgentState {
     public String toString() {
         String str = "";
 
-        str = str + " position=\"(" + getRowPosition() + "," + "" + getColumnPosition() + ")\"";
+        str = str + " position=\"(" + getFila() + "," + "" + getColumna() + ")\"";
         str = str + " energy=\"" + energy + "\"\n";
 
         str = str + "world=\"[ \n";
@@ -203,19 +305,19 @@ public class EstadoAgente extends SearchBasedAgentState {
         return posicion;
     }
 
-    public void setRowPosition(int value) {
+    public void setFila(int value) {
         this.posicion.setFila(value);
     }
 
-    public void setColumnPosition(int value) {
+    public void setColumna(int value) {
         this.posicion.setColumna(value);
     }
 
-    public int getRowPosition() {
+    public int getFila() {
         return posicion.getFila();
     }
 
-    public int getColumnPosition() {
+    public int getColumna() {
         return posicion.getColumna();
     }
 

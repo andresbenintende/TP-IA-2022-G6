@@ -179,7 +179,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
     public List<Integer> getCeldasArriba(Posicion pos) {
         if (pos.getFila() == 0) {
-            return null;  //límite del tablero
+            return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
         int celda;
@@ -197,7 +197,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
     public List<Integer> getCeldasIzq(Posicion pos) {
         if (pos.getColumna() == 0) {
-            return null;  //límite del tablero
+            return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
         int celda;
@@ -215,7 +215,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
     public List<Integer> getCeldasAbajo(Posicion pos) {
         if (pos.getFila() == 4) {
-            return null;  //límite del tablero
+            return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
         int celda;
@@ -233,7 +233,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
     public List<Integer> getCeldasDer(Posicion pos) {
         if (pos.getFila() == 8) {
-            return null;  //límite del tablero
+            return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
         int celda;

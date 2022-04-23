@@ -12,8 +12,8 @@ public class AgenteGoal extends GoalTest {
 
     @Override
     public boolean isGoalState(AgentState agentState) {
-        if (((PacmanAgentState) agentState).isNoMoreFood() &&
-                ((PacmanAgentState) agentState).isAllWorldKnown()) {
+        if (((EstadoAgente) agentState).noHayMasZombies() && ((EstadoAgente) agentState).getSoles() > 0)
+        {
             return true;
         }
         return false;

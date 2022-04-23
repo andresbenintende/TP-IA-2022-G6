@@ -5,6 +5,7 @@ import frsf.cidisi.faia.agent.search.SearchBasedAgentState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Represent the internal state of the Pacman.
@@ -74,7 +75,7 @@ public class EstadoAgente extends SearchBasedAgentState {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
             Posicion posicion = new Posicion(this.getFila()-(i+1), this.getColumna());
 
-            actualizarSensoresVerticales(posicion,valorCelda);
+            actualizarSensores(posicion,valorCelda);
         }
 
         //Actualizo sensor de abajo
@@ -82,7 +83,7 @@ public class EstadoAgente extends SearchBasedAgentState {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
             Posicion posicion = new Posicion(this.getFila()+(i+1), this.getColumna());
 
-            actualizarSensoresVerticales(posicion,valorCelda);
+            actualizarSensores(posicion,valorCelda);
         }
 
         //Actualizo sensor de la derecha
@@ -90,7 +91,7 @@ public class EstadoAgente extends SearchBasedAgentState {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
             Posicion posicion = new Posicion(this.getFila(), this.getColumna()+(i+1));
 
-            actualizarSensorDer(posicion,valorCelda);
+            actualizarSensores(posicion,valorCelda);
         }
 
         //Actualizo sensor de la izquierda
@@ -98,155 +99,122 @@ public class EstadoAgente extends SearchBasedAgentState {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
             Posicion posicion = new Posicion(this.getFila(), this.getColumna()-(i+1));
 
-            actualizarSensorIzq(posicion,valorCelda);
+            actualizarSensores(posicion,valorCelda);
         }
 
-
-
+        cantZombies = percepcion.getCantidadZombies();
         soles = percepcion.getEnergiaSoles();
     }
 
 
     /**
-     * Funcion genérica para analizar los sensores de arriba y abajo,
-     * Ya que el comportamiento de ambos es similar
-     * @param posicion
-     * @param valorCelda
+     * Funcion genérica para analizar los sensores y actualizar el estado del agente
+     * @param posicionInformada
+     * @param valorInformado
      */
-    private void actualizarSensoresVerticales(Posicion posicion, Integer valorCelda) {
-        int valorTablero = this.tablero[posicion.getFila()][posicion.getColumna()];
+    private void actualizarSensores(Posicion posicionInformada, Integer valorInformado) {
+        int valorCelda = this.tablero[posicionInformada.getFila()][posicionInformada.getColumna()];
 
-        if(valorTablero != valorCelda) {
-            if(valorCelda > 0){
-                actualizarListaGirasol(posicion, valorCelda);
+        if(valorCelda != valorInformado) {
+            if(valorInformado > 0){
+                actualizarListaGirasol(posicionInformada, valorInformado);
             }
 
-            if(valorCelda == 0){
-                if(valorTablero > 0){
-                    this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicion);
+            if(valorInformado == 0){
+                if(valorCelda > 0){
+                    this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicionInformada);
                 }
                 else{
+                    //Se escapó un zombie y tengo que "moverlo" manualmente
+                    Posicion posicionAux = new Posicion(posicionInformada.getFila(), posicionInformada.getColumna()-1);
+                    this.zombies.stream().filter(zombie -> zombie.getPosicion() == posicionInformada).findFirst().get().setPosicion(posicionAux);
 
+                    //Actualizo el tablero en este punto para el movimiento manual
+                    tablero[posicionAux.getFila()][posicionAux.getColumna()] = valorCelda;
                 }
             }
+            if(valorInformado < 0){
+                //valorCelda == 0? en ese casillero no habia nada antes, ahora tengo un zombie
+                if(valorCelda == 0){
+                    agregarZombie(posicionInformada,valorInformado);
+                }
 
-            if(valorCelda < =0)
+                //valorCelda > 0? antes tenia un girasol, ahora tengo un zombie que mató al girasol
+                if(valorCelda > 0){
+                    //Quitar al girasol de la lista
+                    this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicionInformada);
+                    //Agregar al zombie a la lista
+                    agregarZombie(posicionInformada,valorInformado);
+                }
 
-        }
-
-        if(valorCelda != 0){
-            //Zombie
-            if(valorCelda < 0){
-                actualizarListaZombie(posicion, valorCelda);
+                //valorCelda < 0? era otro zombie que se movió y ahora estoy viendo un zombie diferente
+                if(valorCelda < 0){
+                    Posicion posAux = new Posicion(posicionInformada.getFila(),posicionInformada.getColumna()-1);
+                    agregarZombie(posAux,tablero[posicionInformada.getFila()][posicionInformada.getColumna()]);
+                    agregarZombie(posicionInformada,valorInformado);
+                }
             }
-            //Girasol
-            if(valorCelda > 0){
-                actualizarListaGirasol(posicion, valorCelda);
-            }
-        }
-        else{
-            //Si en el tablero figura que tenía un zombie, entonces el zombie avanzó
-            if(this.tablero[posicion.getFila()][posicion.getColumna()] < 0) {
-                actualizarListaZombie(posicion, valorCelda);
-                //"Muevo" el zombie dentro del tablero
-                this.tablero[posicion.getFila()][posicion.getColumna()-1] = this.tablero[posicion.getFila()][posicion.getColumna()];
-            }
-
-            if(this.tablero[posicion.getFila()][posicion.getColumna()] > 0) {
-                this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicion);
-            }
-        }
         //Actualizo el valor del tablero
-        this.tablero[posicion.getFila()][posicion.getColumna()] = valorCelda;
-
-    }
-
-    private void actualizarSensorDer(Posicion posicion, Integer valorCelda) {
-        if(valorCelda != 0){
-            //Zombie
-            if(valorCelda < 0){
-                actualizarListaZombie(posicion, valorCelda);
-            }
-            //Girasol
-            if(valorCelda > 0){
-                actualizarListaGirasol(posicion, valorCelda);
-            }
+        this.tablero[posicionInformada.getFila()][posicionInformada.getColumna()] = valorInformado;
         }
     }
-    private void actualizarSensorIzq(Posicion posicion, Integer valorCelda) {
 
+    /**
+     * Esta funcion agrega un zombie nuevo o actualiza la posición de un zombie preexistente.
+     * Verifica si en la fila de percepción ya existe un zombie con ese poder.
+     * Si no existe, lo agrega. Si existe, actualiza su posición.
+     * @param posicionInformada
+     * @param valorInformado
+     */
+    private void agregarZombie(Posicion posicionInformada, Integer valorInformado) {
+        try {
+        Zombie zombieAux = this.zombies.stream().filter(zombie -> zombie.getPosicion().getFila() == posicionInformada.getFila())
+                .filter(zombiesFila -> zombiesFila.getPoder() == valorInformado).findFirst().get();
+
+            //Actualizo el tablero y la posición del zombie
+            Posicion posAux = zombieAux.getPosicion();
+            tablero[posAux.getFila()][posAux.getColumna()] = 0;
+            zombieAux.setPosicion(posicionInformada);
+        }
+        catch (NoSuchElementException e){
+            //Es un zombie nuevo, lo agrego
+            this.zombies.add(new Zombie(posicionInformada,valorInformado));
+        }
     }
-
 
     private void actualizarListaGirasol(Posicion posicion, Integer valorCelda) {
         this.girasoles.stream().filter(girasol -> girasol.getPosicion() == posicion).findFirst().get().setCantSoles(valorCelda);
     }
 
-    private void actualizarListaZombie(Posicion posicion, Integer valorCelda) {
-        //Si en la posicion tenía registrado un girasol, entonces el zombie lo eliminó
-        if(hayGirasol(posicion)){
-            this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicion);
-        }
-
-        //Si en la posición tenía registrado un zombie, quiere decir que se movió,
-        //por lo tanto registramos un movimiento ficticio, para no perder el rastro del zombie
-        if(hayZombie(posicion)){
-            Posicion posicionAux = new Posicion(posicion.getFila(), posicion.getColumna()-1);
-            this.zombies.stream().filter(zombie -> zombie.getPosicion() == posicion).findFirst().get().setPosicion(posicionAux);
-        }
-        //En la posición no tenía registrado un zombie, por lo tanto lo agrego a la lista
-        else {
-            this.zombies.add(new Zombie(posicion, valorCelda));
-        }
-    }
-
-    private boolean hayZombie(Posicion posicion) {
-        for(Zombie zombie : this.zombies){
-            if(zombie.getPosicion() == posicion)
-                return true;
-        }
-        return false;
-    }
-
-    private boolean hayGirasol(Posicion posicion) {
-        for(Girasol girasol : this.girasoles){
-            if(girasol.getPosicion() == posicion)
-                return true;
-        }
-        return false;
-    }
-
     /**
-     * This method is optional, and sets the initial state of the agent.
+     * Método opcional para inicializar el estado del agente
      */
     @Override
     public void initState() {
         for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
-                tablero[row][col] = PacmanPerception.UNKNOWN_PERCEPTION;
+            for (int col = 0; col < tablero[0].length; col++) {
+                tablero[row][col] = Percepcion.EMPTY_PERCEPTION;
             }
         }
-
         this.setFila(1);
         this.setColumna(1);
-
-        this.setSoles(50);
+        this.setSoles(20);
     }
 
     /**
-     * This method returns the String representation of the agent state.
+     * Este método retorna una representación del estado del agente mediante String
      */
     @Override
     public String toString() {
         String str = "";
 
-        str = str + " position=\"(" + getFila() + "," + "" + getColumna() + ")\"";
-        str = str + " energy=\"" + energy + "\"\n";
+        str = str + " posicion=\"(" + getFila() + "," + "" + getColumna() + ")\"";
+        str = str + " soles=\"" + soles + "\"\n";
 
-        str = str + "world=\"[ \n";
+        str = str + "tablreo=\"[ \n";
         for (int row = 0; row < tablero.length; row++) {
             str = str + "[ ";
-            for (int col = 0; col < tablero.length; col++) {
+            for (int col = 0; col < tablero[0].length; col++) {
                 if (tablero[row][col] == -1) {
                     str = str + "* ";
                 } else {
@@ -261,43 +229,40 @@ public class EstadoAgente extends SearchBasedAgentState {
     }
 
     /**
-     * This method is used in the search process to verify if the node already
-     * exists in the actual search.
+     * Este método es usado en el proceso de búsqueda para verificar si el nodo ya existe
+     * en la búsqueda actual
      */
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof PacmanAgentState))
+        if (!(obj instanceof EstadoAgente))
             return false;
 
-        int[][] worldObj = ((PacmanAgentState) obj).getWorld();
-        int[] positionObj = ((PacmanAgentState) obj).getPosition();
+        int[][] tableroObj = ((EstadoAgente) obj).getTablero();
+        Posicion posicionObj = ((EstadoAgente) obj).getPosicion();
 
         for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
-                if (tablero[row][col] != worldObj[row][col]) {
+            for (int col = 0; col < tablero[0].length; col++) {
+                if (tablero[row][col] != tableroObj[row][col]) {
                     return false;
                 }
             }
         }
-
-        if (position[0] != positionObj[0] || position[1] != positionObj[1]) {
+        if (posicion.getFila() != posicionObj.getFila() || posicion.getColumna() != posicionObj.getColumna())
             return false;
-        }
-
         return true;
     }
 
-    // The following methods are Pacman-specific:
+    // Métodos específicos del agente Planta:
 
-    public int[][] getWorld() {
+    public int[][] getTablero() {
         return tablero;
     }
 
-    public int getWorldPosition(int row, int col) {
+    public int getPosicionTablero(int row, int col) {
         return tablero[row][col];
     }
 
-    public void setWorldPosition(int row, int col, int value) {
+    public void setPosicionTablero(int row, int col, int value) {
         this.tablero[row][col] = value;
     }
 
@@ -325,67 +290,20 @@ public class EstadoAgente extends SearchBasedAgentState {
         return soles;
     }
 
-    private void setSoles(int soles) {
+    public void setSoles(int soles) {
         this.soles = soles;
     }
 
-    public boolean isAllWorldKnown() {
-        for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
-                if (tablero[row][col] == PacmanPerception.UNKNOWN_PERCEPTION) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+    public List<Girasol> getGirasoles() {
+        return girasoles;
     }
 
-    public int getUnknownCellsCount() {
-        int result = 0;
-
-        for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
-                if (tablero[row][col] == PacmanPerception.UNKNOWN_PERCEPTION) {
-                    result++;
-                }
-            }
-        }
-
-        return result;
+    public List<Zombie> getZombies() {
+        return zombies;
     }
 
-    public int getRemainingFoodCount() {
-        int result = 0;
-
-        for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
-                if (tablero[row][col] == PacmanPerception.FOOD_PERCEPTION) {
-                    result++;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    public boolean isNoMoreFood() {
-        for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
-                if (tablero[row][col] == PacmanPerception.FOOD_PERCEPTION) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public int getVisitedCellsCount() {
-        return visitedCells;
-    }
-
-    public void increaseVisitedCellsCount() {
-        this.visitedCells = +20;
+    public boolean noHayMasZombies() {
+        return cantZombies == 0;
     }
 }
 

@@ -16,10 +16,12 @@ public class Percepcion extends Perception {
     private List<Integer> sensorDer;
     private List<Integer> sensorAbajo;
     private int energiaSoles;
+    private int cantidadZombies;
 
     public Percepcion() {
 
         energiaSoles = 20;
+        cantidadZombies = 5;
         this.sensorIzq = new ArrayList<>();
         this.sensorArriba = new ArrayList<>();
         this.sensorDer = new ArrayList<>();
@@ -36,7 +38,7 @@ public class Percepcion extends Perception {
      */
     @Override
     public void initPerception(Agent agent, Environment environment) {
-      //  Agente planta = (Agente) agent;
+        Agente planta = (Agente) agent;
         Ambiente ambiente = (Ambiente) environment;
         EstadoAmbiente estadoAmbiente =
                 ambiente.getEnvironmentState();
@@ -47,6 +49,8 @@ public class Percepcion extends Perception {
         this.setSensorIzq(estadoAmbiente.getCeldasIzq(pos));
         this.setSensorDer(estadoAmbiente.getCeldasDer(pos));
         this.setSensorAbajo(estadoAmbiente.getCeldasAbajo(pos));
+        this.setEnergiaSoles(estadoAmbiente.getSolesPlanta());
+        this.setCantidadZombies(estadoAmbiente.getCantidadZombies());
     }
 
     public List<Integer> getSensorIzq() {
@@ -95,5 +99,13 @@ public class Percepcion extends Perception {
         str.append("Sensor Abajo: " + this.sensorAbajo);
 
         return str.toString();
+    }
+
+    public int getCantidadZombies() {
+        return this.cantidadZombies;
+    }
+
+    public void setCantidadZombies(int cantidadZombies) {
+        this.cantidadZombies = cantidadZombies;
     }
 }

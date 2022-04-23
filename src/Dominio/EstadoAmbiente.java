@@ -248,4 +248,8 @@ public class EstadoAmbiente extends EnvironmentState {
         while(pos.getColumna() != 8);
         return celdas;
     }
+
+    public int getCantidadZombies() {
+        return zombies.size();
+    }
 }

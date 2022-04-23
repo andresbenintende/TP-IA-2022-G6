@@ -6,6 +6,7 @@ import frsf.cidisi.faia.agent.search.SearchBasedAgentState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Represent the internal state of the Pacman.
@@ -30,7 +31,7 @@ public class EstadoAgente extends SearchBasedAgentState {
 
     public EstadoAgente() {
         tablero = new int[5][9];
-        posicion = new Posicion(1,3);
+        posicion = new Posicion(1, 3);
         cantZombies = 5;
         soles = 5;
         this.initState();
@@ -71,35 +72,35 @@ public class EstadoAgente extends SearchBasedAgentState {
 
         //Actualizar sensores
         //Actualizo sensor de arriba
-        for(int i = 0; i < percepcion.getSensorArriba().size(); i++){
+        for (int i = 0; i < percepcion.getSensorArriba().size(); i++) {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila()-(i+1), this.getColumna());
+            Posicion posicion = new Posicion(this.getFila() - (i + 1), this.getColumna());
 
-            actualizarSensores(posicion,valorCelda);
+            actualizarSensores(posicion, valorCelda);
         }
 
         //Actualizo sensor de abajo
-        for(int i = 0; i < percepcion.getSensorAbajo().size(); i++){
+        for (int i = 0; i < percepcion.getSensorAbajo().size(); i++) {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila()+(i+1), this.getColumna());
+            Posicion posicion = new Posicion(this.getFila() + (i + 1), this.getColumna());
 
-            actualizarSensores(posicion,valorCelda);
+            actualizarSensores(posicion, valorCelda);
         }
 
         //Actualizo sensor de la derecha
-        for(int i = 0; i < percepcion.getSensorDer().size(); i++){
+        for (int i = 0; i < percepcion.getSensorDer().size(); i++) {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila(), this.getColumna()+(i+1));
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna() + (i + 1));
 
-            actualizarSensores(posicion,valorCelda);
+            actualizarSensores(posicion, valorCelda);
         }
 
         //Actualizo sensor de la izquierda
-        for(int i = 0; i < percepcion.getSensorIzq().size(); i++){
+        for (int i = 0; i < percepcion.getSensorIzq().size(); i++) {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila(), this.getColumna()-(i+1));
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna() - (i + 1));
 
-            actualizarSensores(posicion,valorCelda);
+            actualizarSensores(posicion, valorCelda);
         }
 
         cantZombies = percepcion.getCantidadZombies();
@@ -109,76 +110,79 @@ public class EstadoAgente extends SearchBasedAgentState {
 
     /**
      * Funcion genérica para analizar los sensores y actualizar el estado del agente
+     *
      * @param posicionInformada
      * @param valorInformado
      */
     private void actualizarSensores(Posicion posicionInformada, Integer valorInformado) {
         int valorCelda = this.tablero[posicionInformada.getFila()][posicionInformada.getColumna()];
 
-        if(valorCelda != valorInformado) {
-            if(valorInformado > 0){
+        if (valorCelda != valorInformado) {
+            if (valorInformado > 0) {
                 actualizarListaGirasol(posicionInformada, valorInformado);
             }
 
-            if(valorInformado == 0){
-                if(valorCelda > 0){
+            if (valorInformado == 0) {
+                //En esta posición había un girasol que fue eliminado por un zombie
+                if (valorCelda > 0) {
                     this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicionInformada);
-                }
-                else{
+                } else {
                     //Se escapó un zombie y tengo que "moverlo" manualmente
-                    Posicion posicionAux = new Posicion(posicionInformada.getFila(), posicionInformada.getColumna()-1);
+                    Posicion posicionAux = new Posicion(posicionInformada.getFila(), posicionInformada.getColumna() - 1);
                     this.zombies.stream().filter(zombie -> zombie.getPosicion() == posicionInformada).findFirst().get().setPosicion(posicionAux);
 
                     //Actualizo el tablero en este punto para el movimiento manual
                     tablero[posicionAux.getFila()][posicionAux.getColumna()] = valorCelda;
                 }
             }
-            if(valorInformado < 0){
-                //valorCelda == 0? en ese casillero no habia nada antes, ahora tengo un zombie
-                if(valorCelda == 0){
-                    agregarZombie(posicionInformada,valorInformado);
+            if (valorInformado < 0) {
+                //valorCelda == 0? en ese casillero no había nada antes, ahora tengo un zombie
+                if (valorCelda == 0) {
+                    agregarZombie(posicionInformada, valorInformado);
                 }
 
                 //valorCelda > 0? antes tenia un girasol, ahora tengo un zombie que mató al girasol
-                if(valorCelda > 0){
+                if (valorCelda > 0) {
                     //Quitar al girasol de la lista
                     this.girasoles.removeIf(girasol -> girasol.getPosicion() == posicionInformada);
                     //Agregar al zombie a la lista
-                    agregarZombie(posicionInformada,valorInformado);
+                    agregarZombie(posicionInformada, valorInformado);
                 }
 
                 //valorCelda < 0? era otro zombie que se movió y ahora estoy viendo un zombie diferente
-                if(valorCelda < 0){
-                    Posicion posAux = new Posicion(posicionInformada.getFila(),posicionInformada.getColumna()-1);
-                    agregarZombie(posAux,tablero[posicionInformada.getFila()][posicionInformada.getColumna()]);
-                    agregarZombie(posicionInformada,valorInformado);
+                if (valorCelda < 0) {
+                    //"muevo" el zombie que estaba anteriormente en esa posición
+                    Posicion posAux = new Posicion(posicionInformada.getFila(), posicionInformada.getColumna() - 1);
+                    agregarZombie(posAux, tablero[posicionInformada.getFila()][posicionInformada.getColumna()]);
+
+                    //agrego el nuevo zombie detectado
+                    agregarZombie(posicionInformada, valorInformado);
                 }
             }
-        //Actualizo el valor del tablero
-        this.tablero[posicionInformada.getFila()][posicionInformada.getColumna()] = valorInformado;
+            //Actualizo el valor del tablero
+            this.tablero[posicionInformada.getFila()][posicionInformada.getColumna()] = valorInformado;
         }
     }
 
     /**
-     * Esta funcion agrega un zombie nuevo o actualiza la posición de un zombie preexistente.
+     * Esta función agrega un zombie nuevo o actualiza la posición de un zombie preexistente.
      * Verifica si en la fila de percepción ya existe un zombie con ese poder.
      * Si no existe, lo agrega. Si existe, actualiza su posición.
+     *
      * @param posicionInformada
      * @param valorInformado
      */
     private void agregarZombie(Posicion posicionInformada, Integer valorInformado) {
-        try {
-        Zombie zombieAux = this.zombies.stream().filter(zombie -> zombie.getPosicion().getFila() == posicionInformada.getFila())
-                .filter(zombiesFila -> zombiesFila.getPoder() == valorInformado).findFirst().get();
-
+        Optional<Zombie> zombieAux = this.zombies.stream().filter(zombie -> zombie.getPosicion().getFila() == posicionInformada.getFila())
+                .filter(zombiesFila -> zombiesFila.getPoder() == valorInformado).findFirst();
+        if (zombieAux.isPresent()) {
             //Actualizo el tablero y la posición del zombie
-            Posicion posAux = zombieAux.getPosicion();
+            Posicion posAux = zombieAux.get().getPosicion();
             tablero[posAux.getFila()][posAux.getColumna()] = 0;
-            zombieAux.setPosicion(posicionInformada);
-        }
-        catch (NoSuchElementException e){
+            zombieAux.get().setPosicion(posicionInformada);
+        } else {
             //Es un zombie nuevo, lo agrego
-            this.zombies.add(new Zombie(posicionInformada,valorInformado));
+            this.zombies.add(new Zombie(posicionInformada, valorInformado));
         }
     }
 

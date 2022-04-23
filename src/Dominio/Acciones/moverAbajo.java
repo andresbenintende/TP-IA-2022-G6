@@ -29,6 +29,8 @@ public class moverAbajo extends SearchAction {
 
         //Una vez que logra moverse, ejecuta las acciones auxiliares
         int valorCelda = (estadoAgente.getTablero()[posicion.getFila()][posicion.getColumna()]);
+        //TODO Perder soles
+
         //Hay un girasol, entonces toma sus soles
         if(valorCelda > 0){
             estadoAgente.setSoles(estadoAgente.getSoles() + valorCelda);
@@ -36,8 +38,8 @@ public class moverAbajo extends SearchAction {
         //Busco zombies en las posiciones adyacentes
         List<Integer> celdasAdyacentes = Auxiliar.getAdyacentes(estadoAgente.getTablero(), posicion);
 
-        //Para identificar facilmente la posición del zombie adyacente, seteo la posición auxiliar
-        //sabiendo de antemando que las celdas adyacentes se ordenan siempre de la misma manera:
+        //Para identificar fácilmente la posición del zombie adyacente, seteo la posición auxiliar
+        //sabiendo de antemano que las celdas adyacentes se ordenan siempre de la misma manera:
         //izquierda-arriba-derecha-abajo
         for(int celdaAdy : celdasAdyacentes){
             Posicion posAux = new Posicion(posicion.getFila(), posicion.getColumna());

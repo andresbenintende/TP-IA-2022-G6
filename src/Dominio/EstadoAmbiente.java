@@ -106,7 +106,7 @@ public class EstadoAmbiente extends EnvironmentState {
             // Superposición: si se da el caso que la posición esté ocupada, se suma 1 a la columna
             //               (como si se tratase de una cola de espera)
 
-            Posicion posicion = new Posicion(Aleatorio.nroRandom(0,4), 8);
+            Posicion posicion = new Posicion(Aleatorio.nroRandom(0,4), 9);
 
             //
             if(tablero[posicion.getFila()][posicion.getColumna()] < 0){
@@ -138,7 +138,7 @@ public class EstadoAmbiente extends EnvironmentState {
         for(Zombie zombie: zombies){
             //Si debe moverse en este ciclo de percepción ingresa
             if(zombie.getProxMov() == 0) {
-                //Configuro el contador del proximo movimiento
+                //Configuro el contador del próximo movimiento
                 zombie.setProxMov(Aleatorio.nroRandom(0,3));
                 Posicion posZombie = zombie.getPosicion();
                 //Si la posición siguiente (posición adyacente izquierda) no está ocupada por otro zombie, avanza
@@ -146,7 +146,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
                     posZombie.setColumna(posZombie.getColumna() - 1);
                     zombie.setPosicion(posZombie);
-                    //Si en esa posicion hay un girasol lo elimina
+                    //Si en esa posición hay un girasol lo elimina
                     if(this.getTablero()[posZombie.getFila()][posZombie.getColumna() ] > 0){
                             quitarSoles(posZombie);
                         }
@@ -178,12 +178,15 @@ public class EstadoAmbiente extends EnvironmentState {
         String str = "";
 
         str = str + "[ \n";
-        for (int row = 0; row < tablero.length; row++) {
+        for (int row = 1; row < tablero.length; row++) {
             str = str + "[ ";
-            for (int col = 0; col < tablero.length; col++) {
+            for (int col = 1; col < tablero[0].length; col++) {
+                if (tablero[row][col] >= 0 && tablero[row][col] <= 9) {
+                    str = str + " ";
+                }
                 str = str + tablero[row][col] + " ";
             }
-            str = str + " ]\n";
+            str = str + "]\n";
         }
         str = str + " ]";
 
@@ -192,7 +195,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
     public List<Integer> getCeldasArriba(Posicion p) {
         Posicion pos = new Posicion(p.getFila(),p.getColumna());
-        if (pos.getFila() == 0) {
+        if (pos.getFila() == 1) {
             return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
@@ -205,13 +208,13 @@ public class EstadoAmbiente extends EnvironmentState {
                 return celdas;
             }
         }
-        while(pos.getFila() != 0);
+        while(pos.getFila() != 1);
         return celdas;
     }
 
     public List<Integer> getCeldasIzq(Posicion p) {
         Posicion pos = new Posicion(p.getFila(),p.getColumna());
-        if (pos.getColumna() == 0) {
+        if (pos.getColumna() == 1) {
             return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
@@ -224,13 +227,13 @@ public class EstadoAmbiente extends EnvironmentState {
                 return celdas;
             }
         }
-        while(pos.getColumna() != 0);
+        while(pos.getColumna() != 1);
         return celdas;
     }
 
     public List<Integer> getCeldasAbajo(Posicion p) {
         Posicion pos = new Posicion(p.getFila(),p.getColumna());
-        if (pos.getFila() == 4) {
+        if (pos.getFila() == 5) {
             return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
@@ -243,13 +246,13 @@ public class EstadoAmbiente extends EnvironmentState {
                 return celdas;
             }
         }
-        while(pos.getFila() != 4);
+        while(pos.getFila() != 5);
         return celdas;
     }
 
     public List<Integer> getCeldasDer(Posicion p) {
         Posicion pos = new Posicion(p.getFila(),p.getColumna());
-        if (pos.getFila() == 8) {
+        if (pos.getFila() == 9) {
             return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();
@@ -262,7 +265,7 @@ public class EstadoAmbiente extends EnvironmentState {
                 return celdas;
             }
         }
-        while(pos.getColumna() != 8);
+        while(pos.getColumna() != 9);
         return celdas;
     }
 

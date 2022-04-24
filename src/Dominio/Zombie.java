@@ -10,7 +10,7 @@ public class Zombie {
     public Zombie(Posicion posicion, int poder) {
         this.posicion = posicion;
         this.poder = poder;
-        this.proxMov = Aleatorio.nroRandom(0,2);
+        this.proxMov = Aleatorio.nroRandom(0,2); //esto es para que no se mueva en el momento en que se crea
     }
 
     public Zombie() {

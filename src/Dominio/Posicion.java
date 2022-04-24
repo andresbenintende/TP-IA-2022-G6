@@ -10,6 +10,11 @@ public class Posicion {
         this.columna = columna;
     }
 
+    public Posicion(Posicion p) {
+        this.fila = p.getFila();
+        this.columna = p.getColumna();
+    }
+
     /**
      * This method will return a perception made by the subclass of Environment
      * @param pos

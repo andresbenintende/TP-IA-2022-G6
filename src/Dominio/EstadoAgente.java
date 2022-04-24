@@ -33,6 +33,8 @@ public class EstadoAgente extends SearchBasedAgentState {
         posicionAgente = new Posicion(1, 3);
         cantZombies = 5;
         soles = 5;
+        girasoles = new ArrayList<>();
+        zombies = new ArrayList<>();
         this.initState();
     }
 
@@ -42,10 +44,10 @@ public class EstadoAgente extends SearchBasedAgentState {
      */
     @Override
     public SearchBasedAgentState clone() {
-        int[][] nuevoTablero = new int[5][9];
+        int[][] nuevoTablero = new int[6][10];
 
         for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
+            for (int col = 0; col < tablero[0].length; col++) {
                 nuevoTablero[row][col] = tablero[row][col];
             }
         }
@@ -212,17 +214,16 @@ public class EstadoAgente extends SearchBasedAgentState {
         str = str + " posicion=\"(" + getFila() + "," + "" + getColumna() + ")\"";
         str = str + " soles=\"" + soles + "\"\n";
 
-        str = str + "tablreo=\"[ \n";
-        for (int row = 0; row < tablero.length; row++) {
+        str = str + "tablero=\"[ \n";
+        for (int row = 1; row < tablero.length; row++) {
             str = str + "[ ";
-            for (int col = 0; col < tablero[0].length; col++) {
-                if (tablero[row][col] == -1) {
-                    str = str + "* ";
-                } else {
-                    str = str + tablero[row][col] + " ";
+            for (int col = 1; col < tablero[0].length; col++) {
+                if (tablero[row][col] >= 0 && tablero[row][col] <= 9) {
+                    str = str + " ";
                 }
+                str = str + tablero[row][col] + " ";
             }
-            str = str + " ]\n";
+            str = str + "]\n";
         }
         str = str + " ]\"";
 

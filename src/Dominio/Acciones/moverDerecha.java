@@ -17,7 +17,7 @@ public class moverDerecha extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         EstadoAgente estadoAgente = (EstadoAgente) s;
 
-        Posicion posicion = estadoAgente.getPosicionAgente();
+        Posicion posicion = new Posicion(estadoAgente.getPosicionAgente());
 
         //Chequeo si estoy en la columna de más a la derecha, no puedo moverme. Devuelvo null
         if(posicion.getColumna() == 9)
@@ -27,7 +27,7 @@ public class moverDerecha extends SearchAction {
         estadoAgente.setColumna(posicion.getColumna());
 
         //Una vez que logra moverse, ejecuta las acciones auxiliares
-        //valor del cassillero al que la planta se movera
+        //valor del casillero al que la planta se moverá
         int valorCelda = (estadoAgente.getTablero()[posicion.getFila()][posicion.getColumna()]);
 
 
@@ -89,7 +89,7 @@ public class moverDerecha extends SearchAction {
         estadoAgente.setColumna(posicion.getColumna());
 
         //Una vez que logra moverse, ejecuta las acciones auxiliares
-        //valor del cassillero al que la planta se movera
+        //valor del casillero al que la planta se moverá
         int valorCelda = (estadoAgente.getTablero()[posicion.getFila()][posicion.getColumna()]);
 
         //Pierdo soles vs zombie
@@ -97,7 +97,7 @@ public class moverDerecha extends SearchAction {
             int solesQuitados= valorCelda*2;
             int solesPlantaActualizados = estadoAgente.getSoles() + solesQuitados;
 
-            //actualizao el estado del agente
+            //actualizo el estado del agente
             estadoAgente.setSoles(solesPlantaActualizados);
             //Actualizo el tablero
             estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),solesPlantaActualizados );
@@ -136,11 +136,11 @@ public class moverDerecha extends SearchAction {
         //sabiendo de antemano que las celdas adyacentes se ordenan siempre de la misma manera:
         //izquierda-arriba-derecha-abajo
         for(int celdaAdy : celdasAdyacentes){
-            //Si hay un zoombie y suficiente soles
+            //Si hay un zombie y suficiente soles
             if(celdaAdy < 0 && estadoAgente.getSoles()+celdaAdy > 0){
                 Posicion posZombie = Auxiliar.getPosicionZombie(posicion, celdasAdyacentes.indexOf(celdaAdy));
 
-                //actualizao el estado del AGENTE
+                //actualizo el estado del AGENTE
 
                 estadoAgente.setSoles(estadoAgente.getSoles() + celdaAdy);
                 estadoAgente.getZombies().removeIf(zombie -> zombie.getPosicion() == posZombie);
@@ -149,7 +149,7 @@ public class moverDerecha extends SearchAction {
                 estadoAgente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(),estadoAgente.getSoles() + celdaAdy );
 
 
-                //actualizao el estado del AMBIENTE
+                //actualizo el estado del AMBIENTE
                 estadoAmbiente.setSolesPlanta(estadoAgente.getSoles() + celdaAdy);
                 estadoAmbiente.getZombies().removeIf(zombie -> zombie.getPosicion() == posZombie);
                 //Actualizo el tablero
@@ -161,7 +161,7 @@ public class moverDerecha extends SearchAction {
         //Siembro girasol
         if(estadoAgente.getSoles() > 1) {
 
-            //actualizao el estado del AGENTE
+            //actualizo el estado del AGENTE
 
             //Ocupo un sol para sembrar un girasol
             estadoAgente.setSoles(estadoAgente.getSoles()-1);
@@ -171,7 +171,7 @@ public class moverDerecha extends SearchAction {
             estadoAgente.setPosicionTablero(posicion.getFila(),posicion.getColumna(),0);
             estadoAgente.setPosicionTablero(estadoAgente.getFila(),estadoAgente.getColumna(),estadoAgente.getSoles()-1);
 
-            //actualizao el estado del AMBIENTE
+            //actualizo el estado del AMBIENTE
 
             estadoAmbiente.setSolesPlanta(estadoAgente.getSoles()-1);
             estadoAmbiente.getGirasoles().add(new Girasol(posicion, 0));

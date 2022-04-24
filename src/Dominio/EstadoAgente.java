@@ -5,7 +5,6 @@ import frsf.cidisi.faia.agent.search.SearchBasedAgentState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Optional;
 public class EstadoAgente extends SearchBasedAgentState {
 
     private int[][] tablero;
-    private Posicion posicion;
+    private Posicion posicionAgente;
     private int cantZombies;
     private List<Zombie> zombies;
     private List<Girasol> girasoles;
@@ -22,7 +21,7 @@ public class EstadoAgente extends SearchBasedAgentState {
 
     public EstadoAgente(int[][] t, Posicion p, int c, List<Zombie> z, List<Girasol> g, int s) {
         tablero = t;
-        posicion = p;
+        posicionAgente = p;
         cantZombies = c;
         zombies = z;
         girasoles = g;
@@ -30,8 +29,8 @@ public class EstadoAgente extends SearchBasedAgentState {
     }
 
     public EstadoAgente() {
-        tablero = new int[5][9];
-        posicion = new Posicion(1, 3);
+        tablero = new int[6][10]; //todo tablero
+        posicionAgente = new Posicion(1, 3);
         cantZombies = 5;
         soles = 5;
         this.initState();
@@ -56,7 +55,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         List<Girasol> nuevosGirasoles = new ArrayList<>();
         nuevosGirasoles = girasoles;
 
-        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, this.getPosicion(), this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
+        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, this.getPosicionAgente(), this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
 
         return nuevoEstado;
     }
@@ -73,32 +72,31 @@ public class EstadoAgente extends SearchBasedAgentState {
         //Actualizo sensor de arriba
         for (int i = 0; i < percepcion.getSensorArriba().size(); i++) {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila() - (i + 1), this.getColumna());
+            Posicion posicion = new Posicion(this.getFila() - (i), this.getColumna());
 
             actualizarSensores(posicion, valorCelda);
         }
 
         //Actualizo sensor de abajo
         for (int i = 0; i < percepcion.getSensorAbajo().size(); i++) {
-            Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila() + (i + 1), this.getColumna());
+            Integer valorCelda = percepcion.getSensorAbajo().get(i);
+            Posicion posicion = new Posicion(this.getFila() + (i ), this.getColumna());
 
             actualizarSensores(posicion, valorCelda);
         }
 
         //Actualizo sensor de la derecha
         for (int i = 0; i < percepcion.getSensorDer().size(); i++) {
-            Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila(), this.getColumna() + (i + 1));
+            Integer valorCelda = percepcion.getSensorDer().get(i);
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna() + (i));
 
             actualizarSensores(posicion, valorCelda);
         }
 
         //Actualizo sensor de la izquierda
         for (int i = 0; i < percepcion.getSensorIzq().size(); i++) {
-            Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila(), this.getColumna() - (i + 1));
-
+            Integer valorCelda = percepcion.getSensorIzq().get(i);
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna() - (i));
             actualizarSensores(posicion, valorCelda);
         }
 
@@ -241,7 +239,7 @@ public class EstadoAgente extends SearchBasedAgentState {
             return false;
 
         int[][] tableroObj = ((EstadoAgente) obj).getTablero();
-        Posicion posicionObj = ((EstadoAgente) obj).getPosicion();
+        Posicion posicionObj = ((EstadoAgente) obj).getPosicionAgente();
 
         for (int row = 0; row < tablero.length; row++) {
             for (int col = 0; col < tablero[0].length; col++) {
@@ -250,7 +248,7 @@ public class EstadoAgente extends SearchBasedAgentState {
                 }
             }
         }
-        if (posicion.getFila() != posicionObj.getFila() || posicion.getColumna() != posicionObj.getColumna())
+        if (posicionAgente.getFila() != posicionObj.getFila() || posicionAgente.getColumna() != posicionObj.getColumna())
             return false;
         return true;
     }
@@ -269,24 +267,24 @@ public class EstadoAgente extends SearchBasedAgentState {
         this.tablero[row][col] = value;
     }
 
-    public Posicion getPosicion() {
-        return posicion;
+    public Posicion getPosicionAgente() {
+        return posicionAgente;
     }
 
     public void setFila(int value) {
-        this.posicion.setFila(value);
+        this.posicionAgente.setFila(value);
     }
 
     public void setColumna(int value) {
-        this.posicion.setColumna(value);
+        this.posicionAgente.setColumna(value);
     }
 
     public int getFila() {
-        return posicion.getFila();
+        return posicionAgente.getFila();
     }
 
     public int getColumna() {
-        return posicion.getColumna();
+        return posicionAgente.getColumna();
     }
 
     public int getSoles() {

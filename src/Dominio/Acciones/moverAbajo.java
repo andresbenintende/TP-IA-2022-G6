@@ -33,7 +33,7 @@ public class moverAbajo extends SearchAction {
         //valor del cassillero al que la planta se movera
         int valorCelda = (estadoAgente.getTablero()[posicion.getFila()][posicion.getColumna()]);
 
-        //TODO Perder soles
+
         if(valorCelda <0){
             int solesQuitados= valorCelda*2;         //solesQuitados valor negativo
             estadoAgente.setSoles(estadoAgente.getSoles() + solesQuitados);
@@ -71,24 +71,11 @@ public class moverAbajo extends SearchAction {
 
         return estadoAgente;
     }
-
-
-
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
 
         EstadoAmbiente estadoAmbiente = (EstadoAmbiente) est;
         EstadoAgente estadoAgente = ((EstadoAgente) ast);
-
-        //tablero AMbiente
-        int[][] tableroAmbiente = estadoAmbiente.getTablero();
-
-        //Tablero Agente
-        int[][] tableroAgente = estadoAgente.getTablero();
-
-        //Posicion del agente
-        //Posicion posicionAgente =  estadoAgente.getPosicion();
-        int solesAgente = estadoAgente.getSoles();
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la accion, se relizan las modificacions en duplicado para ambos estados
@@ -200,7 +187,7 @@ public class moverAbajo extends SearchAction {
     }
     @Override
     public Double getCost() {
-        return Double.valueOf(1);
+        return 1.0;
     }
     @Override
     public String toString() {

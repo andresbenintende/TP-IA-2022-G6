@@ -23,5 +23,19 @@ public class Auxiliar {
 
         return  adyacentes;
     }
-
+    public static Posicion getPosicionZombie(Posicion posicion, int index) {
+        Posicion posicionZombie = new Posicion(posicion.getFila(), posicion.getColumna());
+        switch (index) {
+            case 0 -> //Izquierda
+                    posicionZombie.setColumna(posicion.getColumna() - 1);
+            case 1 -> //Arriba
+                    posicionZombie.setFila(posicion.getFila() - 1);
+            case 2 -> //Derecha
+                    posicionZombie.setColumna(posicion.getColumna() + 1);
+            case 3 -> //Abajo
+                    posicionZombie.setFila(posicion.getFila() + 1);
+            default -> {}
+        }
+        return  posicionZombie;
+    }
 }

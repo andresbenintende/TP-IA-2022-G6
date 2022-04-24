@@ -56,8 +56,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         List<Girasol> nuevosGirasoles = new ArrayList<>();
         nuevosGirasoles = girasoles;
 
-        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero,
-                this.getPosicion(), this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
+        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, this.getPosicion(), this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
 
         return nuevoEstado;
     }

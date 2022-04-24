@@ -32,7 +32,7 @@ public class EstadoAmbiente extends EnvironmentState {
     public void setTablero(int[][] tablero) {
         this.tablero = tablero;
     }
-    public void setTablero(int row, int col, int value) {
+    public void setPosicionTablero(int row, int col, int value) {
         this.tablero[row][col] = value;
     }
     public Posicion getPosicionPlanta() {
@@ -131,12 +131,12 @@ public class EstadoAmbiente extends EnvironmentState {
                 //Si la posición siguiente (posición adyacente izquierda) no está ocupada por otro zombie, avanza
                 if (this.getTablero()[posZombie.getFila()][posZombie.getColumna() - 1] >= 0) {
 
-                        //Si en esa posicion hay un girasol lo elimina
-                        if(this.getTablero()[posZombie.getFila()][posZombie.getColumna() - 1] > 0){
-                            quitarSoles(posZombie.getFila(),posZombie.getColumna() - 1);
-                        }
                     posZombie.setColumna(posZombie.getColumna() - 1);
                     zombie.setPosicion(posZombie);
+                    //Si en esa posicion hay un girasol lo elimina
+                    if(this.getTablero()[posZombie.getFila()][posZombie.getColumna() ] > 0){
+                            quitarSoles(posZombie);
+                        }
                 }
             }
             //Disminuyo en 1 el contador
@@ -145,9 +145,9 @@ public class EstadoAmbiente extends EnvironmentState {
         }
     }
 
-    private void quitarSoles(int fila, int columna) {
+    private void quitarSoles(Posicion posicion) {
         //Se encuentra un girasol
-        Girasol girasolMuerto= this.girasoles.stream().filter(girasol -> girasol.checkPosicion(fila,columna)).findFirst().get();
+        Girasol girasolMuerto= this.girasoles.stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get();
         this.girasoles.remove(girasolMuerto);
     }
 

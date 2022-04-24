@@ -11,12 +11,11 @@ public class Girasol {
     }
     /**
      * This method will return a perception made by the subclass of Environment
-     * @param fila,
-     * @param columna
+     * @param posicion
      * @return boolean
      */
-    public boolean checkPosicion(int fila, int columna){
-        if(this.getPosicion().getColumna()==columna && this.getPosicion().getFila()==fila){
+    public boolean checkPosicion(Posicion posicion){
+        if(this.getPosicion().getColumna()== posicion.getColumna() && this.getPosicion().getFila()== posicion.getFila()){
             return true;
         }
         return  false;

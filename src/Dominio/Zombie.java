@@ -13,6 +13,9 @@ public class Zombie {
         this.proxMov = Aleatorio.nroRandom(0,2);
     }
 
+    public Zombie() {
+    }
+
     /**
      * This method will return a true if the position passed is the same where de zombie is
      * @param fila

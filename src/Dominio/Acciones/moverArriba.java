@@ -19,7 +19,7 @@ public class moverArriba extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         EstadoAgente estadoAgente = (EstadoAgente) s;
 
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
         //Chequeo si estoy en la fila de más arriba, no puedo moverme. Devuelvo null
         if(posicion.getFila() == 1)
@@ -78,7 +78,7 @@ public class moverArriba extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la accion, se relizan las modificacions en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
         //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
         if(posicion.getFila() == 1){

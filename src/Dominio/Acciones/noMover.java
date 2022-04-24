@@ -18,7 +18,7 @@ public class noMover extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
 
         EstadoAgente estadoAgente = (EstadoAgente) s;
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
 
         //Una vez que logra moverse, ejecuta las acciones auxiliares
@@ -71,7 +71,7 @@ public class noMover extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la accion, se relizan las modificacions en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
 
         //Una vez que logra moverse, ejecuta las acciones auxiliares
@@ -99,23 +99,22 @@ public class noMover extends SearchAction {
         }
 
         //Hay un girasol, entonces toma sus soles
-        //TODO pero si no me muevo los valore positivos representan a la planta... ojo!!!!!!!!!!!!! ahre
         if(valorCelda > 0){
 
             //si en la posicion hay un girasol y tiene soles
             Optional<Girasol> auxGirasol =estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst();
             if(auxGirasol.isPresent() && auxGirasol.get().getCantSoles()>0){
                 //Agente
-                estadoAgente.setSoles(estadoAgente.getSoles() + auxGirasol.get().getCantSoles());//todo valor celda va a ser la cantidad de soles de la planta !
+                estadoAgente.setSoles(estadoAgente.getSoles() + auxGirasol.get().getCantSoles());
                 estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get().setCantSoles(0);
-                //Actualizo el tablero como gestionamos el tablero??¿¿¿?¿?¿?¿?¿?¿? todo
-                estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),0 );
+                //Actualizo el tablero como gestionamos el tablero??¿¿¿?¿?¿?¿?¿?¿?
+                estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),estadoAgente.getSoles() + auxGirasol.get().getCantSoles() );
 
                 //Ambiente
                 estadoAmbiente.setSolesPlanta(estadoAgente.getSoles() + valorCelda);
                 estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get().setCantSoles(0);
                 //Actualizo el tablero
-                estadoAmbiente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),0 );
+                estadoAmbiente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),estadoAgente.getSoles() + auxGirasol.get().getCantSoles());
             }
 
 

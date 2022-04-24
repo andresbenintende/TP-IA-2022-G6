@@ -17,7 +17,7 @@ public class moverDerecha extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         EstadoAgente estadoAgente = (EstadoAgente) s;
 
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
         //Chequeo si estoy en la columna de más a la derecha, no puedo moverme. Devuelvo null
         if(posicion.getColumna() == 9)
@@ -77,7 +77,7 @@ public class moverDerecha extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la accion, se relizan las modificacions en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
         //Chequeo si estoy en la columna más a la derecha, no puedo moverme. Devuelvo null
         if(posicion.getColumna() == 9){

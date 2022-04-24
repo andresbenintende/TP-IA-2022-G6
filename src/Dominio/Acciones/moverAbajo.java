@@ -1,6 +1,5 @@
 package Dominio.Acciones;
 
-import Auxiliares.Aleatorio;
 import Auxiliares.Auxiliar;
 import Dominio.EstadoAgente;
 import Dominio.EstadoAmbiente;
@@ -19,7 +18,7 @@ public class moverAbajo extends SearchAction {
     public SearchBasedAgentState execute(SearchBasedAgentState s) {
         EstadoAgente estadoAgente = (EstadoAgente) s;
 
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
         //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
         if(posicion.getFila() == 5)
@@ -79,7 +78,7 @@ public class moverAbajo extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la accion, se relizan las modificacions en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicion();
+        Posicion posicion = estadoAgente.getPosicionAgente();
 
         //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
         if(posicion.getFila() == 5){

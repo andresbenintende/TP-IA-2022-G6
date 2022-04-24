@@ -185,7 +185,7 @@ public class moverIzquierda extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 1.0;
+        return 0.0;
     }
     @Override
     public String toString() {

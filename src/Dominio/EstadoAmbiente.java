@@ -22,8 +22,11 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     public EstadoAmbiente() {
-        tablero = new int[5][9];
+        tablero = new int[6][10]; //todo tablero
+        zombies= new ArrayList<>();
+        girasoles = new ArrayList<>();
         this.initState();
+
     }
 
     public int[][] getTablero() {
@@ -68,7 +71,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
         // Se setean las celdas como vacías (con 0)
         for (int row = 0; row < tablero.length; row++) {
-            for (int col = 0; col < tablero.length; col++) {
+            for (int col = 0; col < tablero[0].length; col++) {
                 tablero[row][col] = Percepcion.EMPTY_PERCEPTION;
             }
         }
@@ -93,6 +96,7 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     private void inicializarZombies() {
+        crearZombies();
         for(Zombie zombie : zombies){
             zombie.setPoder(Aleatorio.nroRandom(-5,-1));
 
@@ -116,9 +120,18 @@ public class EstadoAmbiente extends EnvironmentState {
                 else {
                     posicion.setColumna(posicion.getColumna() + 1);
                 }
-                zombie.setPosicion(posicion);
+
             }
+            zombie.setPosicion(posicion);
         }
+    }
+
+    private void crearZombies() {
+       int cantZombies = Aleatorio.nroRandom(4,5);//todo aleatorio zombies corregir
+        for (int z= 1; z<=cantZombies; z++){
+            zombies.add(new Zombie());
+        }
+
     }
 
     public void moverZombies(){
@@ -177,7 +190,8 @@ public class EstadoAmbiente extends EnvironmentState {
         return str;
     }
 
-    public List<Integer> getCeldasArriba(Posicion pos) {
+    public List<Integer> getCeldasArriba(Posicion p) {
+        Posicion pos = new Posicion(p.getFila(),p.getColumna());
         if (pos.getFila() == 0) {
             return new ArrayList<>(); //límite del tablero
         }
@@ -195,7 +209,8 @@ public class EstadoAmbiente extends EnvironmentState {
         return celdas;
     }
 
-    public List<Integer> getCeldasIzq(Posicion pos) {
+    public List<Integer> getCeldasIzq(Posicion p) {
+        Posicion pos = new Posicion(p.getFila(),p.getColumna());
         if (pos.getColumna() == 0) {
             return new ArrayList<>(); //límite del tablero
         }
@@ -213,7 +228,8 @@ public class EstadoAmbiente extends EnvironmentState {
         return celdas;
     }
 
-    public List<Integer> getCeldasAbajo(Posicion pos) {
+    public List<Integer> getCeldasAbajo(Posicion p) {
+        Posicion pos = new Posicion(p.getFila(),p.getColumna());
         if (pos.getFila() == 4) {
             return new ArrayList<>(); //límite del tablero
         }
@@ -231,7 +247,8 @@ public class EstadoAmbiente extends EnvironmentState {
         return celdas;
     }
 
-    public List<Integer> getCeldasDer(Posicion pos) {
+    public List<Integer> getCeldasDer(Posicion p) {
+        Posicion pos = new Posicion(p.getFila(),p.getColumna());
         if (pos.getFila() == 8) {
             return new ArrayList<>(); //límite del tablero
         }

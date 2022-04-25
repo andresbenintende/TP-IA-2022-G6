@@ -36,12 +36,14 @@ public class moverAbajo extends SearchAction {
         if(valorCelda < 0){
             int solesQuitados= valorCelda*2;         //solesQuitados valor negativo
             estadoAgente.setSoles(estadoAgente.getSoles() + solesQuitados);
+            estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),valorCelda );
         }
 
         //Hay un girasol, entonces toma sus soles
         if(valorCelda > 0){
             estadoAgente.setSoles(estadoAgente.getSoles() + valorCelda);
             estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get().setCantSoles(0);
+            estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(),0 );
         }
         //Busco zombies en las posiciones adyacentes
         List<Integer> celdasAdyacentes = Auxiliar.getAdyacentes(estadoAgente.getTablero(), posicion);
@@ -57,15 +59,18 @@ public class moverAbajo extends SearchAction {
                 estadoAgente.setSoles(estadoAgente.getSoles() + celdaAdy);
                 //matar zombie
                 estadoAgente.getZombies().removeIf(zombie -> zombie.getPosicion() == posZombie);
+                estadoAgente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(),0 );
             }
         }
 
         //Siembro girasol
-        if(estadoAgente.getSoles() > 1) {
-            //Ocupo un sol para sembrar un girasol
-            estadoAgente.setSoles(estadoAgente.getSoles()-1);
-            //Añado el girasol a la lista de girasoles del agente
-            estadoAgente.getGirasoles().add(new Girasol(posicion, 0));
+        if (estadoAgente.getSoles() > 1) {
+            if (!estadoAgente.getGirasoles().stream().filter(girasol -> girasol.getPosicion() == posicion).findFirst().isPresent()) {
+                //Ocupo un sol para sembrar un girasol
+                estadoAgente.setSoles(estadoAgente.getSoles() - 1);
+                //Añado el girasol a la lista de girasoles del agente
+                estadoAgente.getGirasoles().add(new Girasol(posicion, 0));
+            }
         }
 
         return estadoAgente;

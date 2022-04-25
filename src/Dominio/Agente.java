@@ -45,11 +45,13 @@ public class Agente extends SearchBasedAgent {
 
         // Creación de la estrategia de búsqueda
 
-        // Búsqueda en profundidad
         DepthFirstSearch estrategia = new DepthFirstSearch();
 
         /**
-         * Otras estrategias de búsqueda:
+         * Estrategias de búsqueda:
+         *
+         * Búsqueda en profundidad
+         * DepthFirstSearch estrategia = new DepthFirstSearch();
          *
          * Búsqueda en anchura:
          * BreathFirstSearch estrategia = new BreathFirstSearch();

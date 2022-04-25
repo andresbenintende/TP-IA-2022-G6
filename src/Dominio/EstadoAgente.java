@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Represent the internal state of the Pacman.
+ * Representa el estado interno del agente
  */
 public class EstadoAgente extends SearchBasedAgentState {
 
@@ -52,12 +52,21 @@ public class EstadoAgente extends SearchBasedAgentState {
             }
         }
         List<Zombie> nuevosZombies = new ArrayList<>();
-        nuevosZombies = zombies;
+
+        for(Zombie zombie : zombies){
+                nuevosZombies.add(zombie.clone());
+        }
+
 
         List<Girasol> nuevosGirasoles = new ArrayList<>();
-        nuevosGirasoles = girasoles;
 
-        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, this.getPosicionAgente(), this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
+        for(Girasol girasol : girasoles){
+                nuevosGirasoles.add(girasol.clone());
+        }
+
+        Posicion nuevaPosicion = new Posicion(posicionAgente);
+
+        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, nuevaPosicion, this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
 
         return nuevoEstado;
     }
@@ -108,7 +117,7 @@ public class EstadoAgente extends SearchBasedAgentState {
 
 
     /**
-     * Funcion genérica para analizar los sensores y actualizar el estado del agente
+     * Función genérica para analizar los sensores y actualizar el estado del agente
      *
      * @param posicionInformada
      * @param valorInformado
@@ -252,6 +261,10 @@ public class EstadoAgente extends SearchBasedAgentState {
         }
         if (posicionAgente.getFila() != posicionObj.getFila() || posicionAgente.getColumna() != posicionObj.getColumna())
             return false;
+
+        if(this.getSoles() != ((EstadoAgente) obj).getSoles())
+            return false;
+
         return true;
     }
 

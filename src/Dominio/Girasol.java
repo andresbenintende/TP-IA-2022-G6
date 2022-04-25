@@ -1,6 +1,6 @@
 package Dominio;
 
-public class Girasol {
+public class Girasol{
     private Posicion posicion;
     private int cantSoles;
 
@@ -31,5 +31,13 @@ public class Girasol {
     }
     public void setCantSoles(int cantSoles) {
         this.cantSoles = cantSoles;
+    }
+
+    public Girasol clone(){
+        try {
+            return (Girasol) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Girasol(new Posicion(posicion.getFila(), posicion.getColumna()), cantSoles);
+        }
     }
 }

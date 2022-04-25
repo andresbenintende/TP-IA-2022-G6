@@ -10,7 +10,7 @@ public class Zombie {
     public Zombie(Posicion posicion, int poder) {
         this.posicion = posicion;
         this.poder = poder;
-        this.proxMov = Aleatorio.nroRandom(0,2); //esto es para que no se mueva en el momento en que se crea
+        this.proxMov = Aleatorio.nroRandom(0, 2); //esto es para que no se mueva en el momento en que se crea
     }
 
     public Zombie() {
@@ -18,16 +18,18 @@ public class Zombie {
 
     /**
      * This method will return a true if the position passed is the same where de zombie is
+     *
      * @param fila
      * @param columna
      * @return boolean
      */
-    public boolean checkPosicion(int fila, int columna){
-        if(this.getPosicion().getColumna()==columna && this.getPosicion().getFila()==fila){
+    public boolean checkPosicion(int fila, int columna) {
+        if (this.getPosicion().getColumna() == columna && this.getPosicion().getFila() == fila) {
             return true;
         }
-        return  false;
+        return false;
     }
+
     public Posicion getPosicion() {
         return posicion;
     }
@@ -50,5 +52,13 @@ public class Zombie {
 
     public void setProxMov(int proxMov) {
         this.proxMov = proxMov;
+    }
+
+    public Zombie clone() {
+        try {
+            return (Zombie) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Zombie(new Posicion(posicion.getFila(), posicion.getColumna()), poder);
+        }
     }
 }

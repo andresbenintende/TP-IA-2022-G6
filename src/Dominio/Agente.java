@@ -81,8 +81,7 @@ public class Agente extends SearchBasedAgent {
         // Consulta a busquedaSolver por la mejor acción
         Action selectedAction = null;
         try {
-            selectedAction =
-                    this.getSolver().solve(new Object[]{this.getProblem()});
+            selectedAction = this.getSolver().solve(new Object[]{this.getProblem()});
         } catch (Exception ex) {
             Logger.getLogger(Agente.class.getName()).log(Level.SEVERE, null, ex);
         }

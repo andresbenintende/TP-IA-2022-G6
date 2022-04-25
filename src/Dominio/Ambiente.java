@@ -42,6 +42,8 @@ public class Ambiente extends Environment{
         perception.setSensorIzq(this.getCeldasIzq(pos));
         perception.setSensorDer(this.getCeldasDer(pos));
         perception.setSensorAbajo(this.getCeldasAbajo(pos));
+        perception.setCantidadZombies(this.getEnvironmentState().getCantidadZombies());
+        perception.setEnergiaSoles(this.getEnvironmentState().getSolesPlanta());
 
         // Devuelve la percepción
         return perception;

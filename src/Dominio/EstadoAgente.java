@@ -30,9 +30,9 @@ public class EstadoAgente extends SearchBasedAgentState {
 
     public EstadoAgente() {
         tablero = new int[6][10]; //todo tablero
-        posicionAgente = new Posicion(1, 3);
-        cantZombies = 5;
-        soles = 5;
+        posicionAgente = new Posicion(3, 1);
+        cantZombies = 0;
+        soles = 0;
         girasoles = new ArrayList<>();
         zombies = new ArrayList<>();
         this.initState();
@@ -199,9 +199,10 @@ public class EstadoAgente extends SearchBasedAgentState {
                 tablero[row][col] = Percepcion.EMPTY_PERCEPTION;
             }
         }
-        this.setFila(1);
-        this.setColumna(1);
-        this.setSoles(20);
+       //TODO ESTABAMOS HARCODEANDO LA POSICION DE DEL AGENTE PLANTA AL INICIALIZARLA
+        //  this.setFila(1);
+       // this.setColumna(1);
+       // this.setSoles(20);
     }
 
     /**

@@ -22,45 +22,11 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     public EstadoAmbiente() {
-        tablero = new int[6][10]; //todo tablero
+        tablero = new int[6][11]; //todo tablero
         zombies= new ArrayList<>();
         girasoles = new ArrayList<>();
         this.initState();
 
-    }
-
-    public int[][] getTablero() {
-        return tablero;
-    }
-    public void setTablero(int[][] tablero) {
-        this.tablero = tablero;
-    }
-    public void setPosicionTablero(int row, int col, int value) {
-        this.tablero[row][col] = value;
-    }
-    public Posicion getPosicionPlanta() {
-        return posicionPlanta;
-    }
-    public void setPosicionPlanta(Posicion posicionPlanta) {
-        this.posicionPlanta = posicionPlanta;
-    }
-    public int getSolesPlanta() {
-        return solesPlanta;
-    }
-    public void setSolesPlanta(int solesPlanta) {
-        this.solesPlanta = solesPlanta;
-    }
-    public List<Zombie> getZombies() {
-        return zombies;
-    }
-    public void setZombies(List<Zombie> zombies) {
-        this.zombies = zombies;
-    }
-    public List<Girasol> getGirasoles() {
-        return girasoles;
-    }
-    public void setGirasoles(List<Girasol> girasoles) {
-        this.girasoles = girasoles;
     }
 
     /**
@@ -86,8 +52,8 @@ public class EstadoAmbiente extends EnvironmentState {
 
     private void inicializarPlanta() {
         //Setear posicion random de la planta
-        this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(0, 4),0));
-
+       //this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(1, 5),1));  //TODO SI EL TABLERO ESTA REFERENCIADO A 1,1 COMO VERTICE INICIAL
+        this.setPosicionPlanta(new Posicion(3,1));
         //Setear cant soles random de la planta
         this.setSolesPlanta(Aleatorio.nroRandom(2,20));
 
@@ -99,16 +65,16 @@ public class EstadoAmbiente extends EnvironmentState {
         crearZombies();
         for(Zombie zombie : zombies){
             zombie.setPoder(Aleatorio.nroRandom(-5,-1));
-
+            zombie.setProxMov(Aleatorio.nroRandom(1,2)); //Se setea este valor para que el zombie no se mueva en el primer ciclo de percepcion
             //Seteo de posición:
             // Fila: aleatoriamente entre 0 y 4
             // Columna: por defecto se setea en 8.
             // Superposición: si se da el caso que la posición esté ocupada, se suma 1 a la columna
             //               (como si se tratase de una cola de espera)
 
-            Posicion posicion = new Posicion(Aleatorio.nroRandom(0,4), 9);
+            Posicion posicion = new Posicion(Aleatorio.nroRandom(1,5), 9);
 
-            //
+            //HAY UN ZOMBIE EN LA POSICION LO TIRO PARA ATRAS
             if(tablero[posicion.getFila()][posicion.getColumna()] < 0){
                 posicion.setColumna(posicion.getColumna() + 1);
             }
@@ -170,6 +136,7 @@ public class EstadoAmbiente extends EnvironmentState {
         }
 
     }
+
     /**
      * Representacion del tablero real
      */
@@ -192,7 +159,6 @@ public class EstadoAmbiente extends EnvironmentState {
 
         return str;
     }
-
     public List<Integer> getCeldasArriba(Posicion p) {
         Posicion pos = new Posicion(p.getFila(),p.getColumna());
         if (pos.getFila() == 1) {
@@ -269,7 +235,43 @@ public class EstadoAmbiente extends EnvironmentState {
         return celdas;
     }
 
+
+    //GETTERS Y SETTERS
     public int getCantidadZombies() {
         return zombies.size();
+    }
+
+    public int[][] getTablero() {
+        return tablero;
+    }
+    public void setTablero(int[][] tablero) {
+        this.tablero = tablero;
+    }
+    public void setPosicionTablero(int row, int col, int value) {
+        this.tablero[row][col] = value;
+    }
+    public Posicion getPosicionPlanta() {
+        return posicionPlanta;
+    }
+    public void setPosicionPlanta(Posicion posicionPlanta) {
+        this.posicionPlanta = posicionPlanta;
+    }
+    public int getSolesPlanta() {
+        return solesPlanta;
+    }
+    public void setSolesPlanta(int solesPlanta) {
+        this.solesPlanta = solesPlanta;
+    }
+    public List<Zombie> getZombies() {
+        return zombies;
+    }
+    public void setZombies(List<Zombie> zombies) {
+        this.zombies = zombies;
+    }
+    public List<Girasol> getGirasoles() {
+        return girasoles;
+    }
+    public void setGirasoles(List<Girasol> girasoles) {
+        this.girasoles = girasoles;
     }
 }

@@ -19,12 +19,11 @@ public class Zombie {
     /**
      * This method will return a true if the position passed is the same where de zombie is
      *
-     * @param fila
-     * @param columna
+     * @param pos
      * @return boolean
      */
-    public boolean checkPosicion(int fila, int columna) {
-        if (this.getPosicion().getColumna() == columna && this.getPosicion().getFila() == fila) {
+    public boolean checkPosicion(Posicion pos) {
+        if (this.getPosicion().getColumna() == pos.getColumna() && this.getPosicion().getFila() == pos.getFila()) {
             return true;
         }
         return false;

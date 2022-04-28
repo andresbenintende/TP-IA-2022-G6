@@ -18,14 +18,16 @@ public class EstadoAgente extends SearchBasedAgentState {
     private List<Zombie> zombies;
     private List<Girasol> girasoles;
     private int soles;
+    private boolean seMueve;
 
-    public EstadoAgente(int[][] t, Posicion p, int c, List<Zombie> z, List<Girasol> g, int s) {
+    public EstadoAgente(int[][] t, Posicion p, int c, List<Zombie> z, List<Girasol> g, int s, boolean m) {
         tablero = t;
         posicionAgente = p;
         cantZombies = c;
         zombies = z;
         girasoles = g;
         soles = s;
+        seMueve = m;
     }
 
     public EstadoAgente() {
@@ -35,6 +37,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         soles = 0;
         girasoles = new ArrayList<>();
         zombies = new ArrayList<>();
+        seMueve = false;
         this.initState();
     }
 
@@ -66,7 +69,7 @@ public class EstadoAgente extends SearchBasedAgentState {
 
         Posicion nuevaPosicion = new Posicion(posicionAgente);
 
-        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, nuevaPosicion, this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles);
+        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, nuevaPosicion, this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles, this.seMueve);
 
         return nuevoEstado;
     }
@@ -319,7 +322,14 @@ public class EstadoAgente extends SearchBasedAgentState {
     }
 
     public boolean noHayMasZombies() {
-        return cantZombies == 0;
+        return ((zombies.size() == 0 && this.getSeMueve()) || cantZombies == 0);
+    }
+
+    public  boolean getSeMueve(){
+        return this.seMueve;
+    }
+    public void setSeMueve(boolean movimiento) {
+        this.seMueve = movimiento;
     }
 }
 

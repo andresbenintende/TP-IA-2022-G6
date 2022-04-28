@@ -12,7 +12,7 @@ public class AgenteGoal extends GoalTest {
 
     @Override
     public boolean isGoalState(AgentState agentState) {
-        if (((EstadoAgente) agentState).noHayMasZombies() && ((EstadoAgente) agentState).getSoles() > 0)
+        if ( (((EstadoAgente) agentState).noHayMasZombies() && ((EstadoAgente) agentState).getSoles() > 0))
         {
             return true;
         }

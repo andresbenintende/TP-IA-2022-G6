@@ -62,12 +62,12 @@ public class Agente extends SearchBasedAgent {
          *
          * Búsqueda A*:
          * IStepCostFunction costo = new CostFunction();
-         * IEstimatedCostFunction heuristica = new Heuristic();
-         * AStarSearch estrategia = new AStarSearch(costo, heuristica);
+         * IEstimatedCostFunction heurística = new Heuristic();
+         * AStarSearch estrategia = new AStarSearch(costo, heurística);
          *
          * Greedy Search:
-         * IEstimatedCostFunction heuristica = new Heuristic();
-         * GreedySearch estrategia = new GreedySearch(heuristica);
+         * IEstimatedCostFunction heurística = new Heuristic();
+         * GreedySearch estrategia = new GreedySearch(heurística);
          */
 
         // Crea un objeto del tipo Search con la estrategia elegida

@@ -86,7 +86,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         //Actualizo sensor de arriba
         for (int i = 0; i < percepcion.getSensorArriba().size(); i++) {
             Integer valorCelda = percepcion.getSensorArriba().get(i);
-            Posicion posicion = new Posicion(this.getFila() - (i), this.getColumna());
+            Posicion posicion = new Posicion(this.getFila() - (i+1), this.getColumna());
 
             actualizarSensores(posicion, valorCelda);
         }
@@ -94,7 +94,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         //Actualizo sensor de abajo
         for (int i = 0; i < percepcion.getSensorAbajo().size(); i++) {
             Integer valorCelda = percepcion.getSensorAbajo().get(i);
-            Posicion posicion = new Posicion(this.getFila() + (i ), this.getColumna());
+            Posicion posicion = new Posicion(this.getFila() + (i+1), this.getColumna());
 
             actualizarSensores(posicion, valorCelda);
         }
@@ -102,7 +102,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         //Actualizo sensor de la derecha
         for (int i = 0; i < percepcion.getSensorDer().size(); i++) {
             Integer valorCelda = percepcion.getSensorDer().get(i);
-            Posicion posicion = new Posicion(this.getFila(), this.getColumna() + (i));
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna() + (i+1));
 
             actualizarSensores(posicion, valorCelda);
         }
@@ -110,7 +110,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         //Actualizo sensor de la izquierda
         for (int i = 0; i < percepcion.getSensorIzq().size(); i++) {
             Integer valorCelda = percepcion.getSensorIzq().get(i);
-            Posicion posicion = new Posicion(this.getFila(), this.getColumna() - (i));
+            Posicion posicion = new Posicion(this.getFila(), this.getColumna() - (i+1));
             actualizarSensores(posicion, valorCelda);
         }
 
@@ -320,6 +320,10 @@ public class EstadoAgente extends SearchBasedAgentState {
     public List<Zombie> getZombies() {
         return zombies;
     }
+
+    public int getCantZombies() { return cantZombies;}
+
+    public void setCantZombies(int cant) {cantZombies = cant;}
 
     public boolean noHayMasZombies() {
         return ((zombies.size() == 0 && this.getSeMueve()) || cantZombies == 0);

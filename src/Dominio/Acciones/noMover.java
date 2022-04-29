@@ -31,7 +31,8 @@ public class noMover extends SearchAction {
         Posicion posicion = estadoAgente.getPosicionAgente();
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
-        return accionAux.executeAux(estadoAgente, estadoAmbiente,posicion);
+        //Se pasa la misma posición porque la planta no se mueve
+        return accionAux.executeAux(estadoAgente, estadoAmbiente,posicion, posicion);
     }
 
     @Override

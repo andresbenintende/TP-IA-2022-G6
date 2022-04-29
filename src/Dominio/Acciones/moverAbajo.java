@@ -35,19 +35,20 @@ public class moverAbajo extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la acción, se realizan las modificaciones en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicionAgente();
+        Posicion posicionActual = estadoAgente.getPosicionAgente();
+        Posicion posicionNueva = new Posicion(0,0);
 
         //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
-        if(posicion.getFila() == 5){
+        if(posicionActual.getFila() == 5){
             return estadoAmbiente;
         }
 
         //Actualizo posicion de la planta
-        posicion.setFila(posicion.getFila()+1);
-        estadoAgente.setFila(posicion.getFila());
+        posicionNueva.setFila(posicionActual.getFila()+1);
+        estadoAgente.setFila(posicionActual.getFila());
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
-        return accionAux.executeAux(estadoAgente, estadoAmbiente,posicion);
+        return accionAux.executeAux(estadoAgente, estadoAmbiente,posicionActual, posicionNueva);
     }
     @Override
     public Double getCost() {

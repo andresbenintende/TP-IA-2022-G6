@@ -1,10 +1,7 @@
 package Dominio.Acciones;
 
 import Auxiliares.Auxiliar;
-import Dominio.EstadoAgente;
-import Dominio.EstadoAmbiente;
-import Dominio.Girasol;
-import Dominio.Posicion;
+import Dominio.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,10 +55,10 @@ public class AccionAuxiliar {
         return estadoAgente;
     }
 
-    public EstadoAmbiente executeAux(EstadoAgente estadoAgente, EstadoAmbiente estadoAmbiente, Posicion posicion){
+    public EstadoAmbiente executeAux(EstadoAgente estadoAgente, EstadoAmbiente estadoAmbiente, Posicion posicionActual, Posicion posicionNueva){
         //Una vez que logra moverse (o no), ejecuta las acciones auxiliares
         //valor del casillero al que la planta se moverá
-        int valorCelda = (estadoAgente.getTablero()[posicion.getFila()][posicion.getColumna()]);
+        int valorCelda = (estadoAgente.getTablero()[posicionNueva.getFila()][posicionNueva.getColumna()]);
 
         //Pierdo soles vs. zombie
         if (valorCelda < 0) {
@@ -71,36 +68,36 @@ public class AccionAuxiliar {
             //Actualizo el estado del agente
             estadoAgente.setSoles(solesPlantaActualizados);
             //Actualizo el tablero
-            estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(), solesPlantaActualizados);
+            estadoAgente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), solesPlantaActualizados);
 
             //Actualizo el estado del ambiente
-            estadoAmbiente.setPosicionPlanta(posicion);
+            estadoAmbiente.setPosicionPlanta(posicionNueva);
             estadoAmbiente.setSolesPlanta(solesPlantaActualizados);
             //Actualizo el tablero
-            estadoAmbiente.setPosicionTablero(posicion.getFila(), posicion.getColumna(), solesPlantaActualizados);
+            estadoAmbiente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), solesPlantaActualizados);
         }
 
         //Hay un girasol, entonces toma sus soles
         if (valorCelda > 0) {
             //Si en la posicion hay un girasol y tiene soles
-            Optional<Girasol> auxGirasol = estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst();
+            Optional<Girasol> auxGirasol = estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst();
             if (auxGirasol.isPresent() && auxGirasol.get().getCantSoles() > 0) {
                 //Agente
                 estadoAgente.setSoles(estadoAgente.getSoles() + auxGirasol.get().getCantSoles());
-                estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get().setCantSoles(0);
+                estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().get().setCantSoles(0);
                 //Actualizo el tablero del agente
-                estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(), estadoAgente.getSoles());
+                estadoAgente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), estadoAgente.getSoles());
 
                 //Ambiente
                 estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
-                estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get().setCantSoles(0);
+                estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().get().setCantSoles(0);
                 //Actualizo el tablero del ambiente
-                estadoAmbiente.setPosicionTablero(posicion.getFila(), posicion.getColumna(), estadoAgente.getSoles());
+                estadoAmbiente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), estadoAgente.getSoles());
             }
         }
 
         //Busco zombies en las posiciones adyacentes
-        List<Integer> celdasAdyacentes = Auxiliar.getAdyacentes(estadoAgente.getTablero(), posicion);
+        List<Integer> celdasAdyacentes = Auxiliar.getAdyacentes(estadoAgente.getTablero(), posicionNueva);
 
         //Para identificar fácilmente la posición del zombie adyacente, seteo la posición auxiliar
         //sabiendo de antemano que las celdas adyacentes se ordenan siempre de la misma manera:
@@ -108,11 +105,13 @@ public class AccionAuxiliar {
         for (int celdaAdy : celdasAdyacentes) {
             //Si hay un zombie y suficiente soles
             if (celdaAdy < 0 && estadoAgente.getSoles() + celdaAdy > 0) {
-                Posicion posZombie = Auxiliar.getPosicionZombie(posicion, celdasAdyacentes.indexOf(celdaAdy));
+                Posicion posZombie = Auxiliar.getPosicionZombie(posicionNueva, celdasAdyacentes.indexOf(celdaAdy));
 
                 //Actualizo el estado del AGENTE
                 estadoAgente.setSoles(estadoAgente.getSoles() + celdaAdy);
                 estadoAgente.getZombies().removeIf(zombie -> zombie.checkPosicion(posZombie));
+                estadoAgente.setCantZombies(estadoAgente.getCantZombies()-1);
+
                 //Actualizo el tablero
                 estadoAgente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(), 0);
                 estadoAgente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
@@ -132,20 +131,38 @@ public class AccionAuxiliar {
             //Ocupo un sol para sembrar un girasol
             estadoAgente.setSoles(estadoAgente.getSoles() - 1);
             //Añado el girasol a la lista de girasoles del agente
-            if (!estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().isPresent()) {
-                estadoAgente.getGirasoles().add(new Girasol(posicion, 0));
+            if (!estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().isPresent()) {
+                estadoAgente.getGirasoles().add(new Girasol(posicionNueva, 0));
             }
             //Actualizo el tablero
             estadoAgente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
 
             //Actualizo el estado del AMBIENTE
             estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
-            if (!estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().isPresent()) {
-                estadoAmbiente.getGirasoles().add(new Girasol(posicion, 0));
+            if (!estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().isPresent()) {
+                estadoAmbiente.getGirasoles().add(new Girasol(posicionNueva, 0));
             }
             //Actualizo el tablero
             estadoAmbiente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
         }
+
+        //Actualizo el tablero en la posición anterior, si es que se movió
+        if(!posicionNueva.checkPosicion(posicionActual)) {
+            //Si en la posición anterior había un zombie, entonces actualizo el tablero al valor del poder del zombie
+            //Sino, seteo el tablero en 0 (puede que haya un girasol, pero este se quedará sin soles porque los consumió el agente)
+            Optional<Zombie> zombieAux = estadoAgente.getZombies().stream().filter(zombie -> zombie.checkPosicion(posicionNueva)).findFirst();
+            if (zombieAux.isPresent()) {
+                var posZombie = zombieAux.get().getPosicion();
+                estadoAgente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(), zombieAux.get().getPoder());
+                estadoAmbiente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(), zombieAux.get().getPoder());
+            }
+            else {
+                estadoAgente.setPosicionTablero(posicionActual.getFila(), posicionActual.getColumna(), 0);
+                estadoAmbiente.setPosicionTablero(posicionActual.getFila(), posicionActual.getColumna(), 0);
+            }
+        }
+
+
         return estadoAmbiente;
     }
 }

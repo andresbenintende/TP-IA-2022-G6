@@ -35,19 +35,20 @@ public class moverIzquierda extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la acción, se realizan las modificaciones en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicionAgente();
+        Posicion posicionActual = estadoAgente.getPosicionAgente();
+        Posicion posicionNueva = new Posicion(0,0);
 
         //Chequeo si estoy en la columna más a la derecha, no puedo moverme. Devuelvo null
-        if (posicion.getColumna() == 1) {
+        if (posicionActual.getColumna() == 1) {
             return estadoAmbiente;
         }
 
         //Actualizo posicion de la planta
-        posicion.setColumna(posicion.getColumna() - 1);
-        estadoAgente.setColumna(posicion.getColumna());
+        posicionNueva.setColumna(posicionActual.getColumna() - 1);
+        estadoAgente.setColumna(posicionActual.getColumna());
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
-        return accionAux.executeAux(estadoAgente, estadoAmbiente, posicion);
+        return accionAux.executeAux(estadoAgente, estadoAmbiente, posicionActual, posicionNueva);
     }
 
     @Override

@@ -46,8 +46,25 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     private void inicializarPosiciones() {
-        inicializarPlanta();
-        inicializarZombies();
+        /**
+         * SETEO MANUAL (PARA PRUEBAS)
+         */
+
+        setPosicionPlanta(new Posicion(3,1));
+        setSolesPlanta(8);
+        setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
+        zombies.add(new Zombie(new Posicion(1,2),-2));
+        zombies.forEach(zombie -> {
+            zombie.setProxMov(2);
+            setPosicionTablero(zombie.getPosicion().getFila(),zombie.getPosicion().getColumna(),zombie.getPoder());
+        });
+
+
+        /**
+         * SETEO AUTOMATICO (RANDOM)
+         */
+     //   inicializarPlanta();
+     //   inicializarZombies();
     }
 
     private void inicializarPlanta() {

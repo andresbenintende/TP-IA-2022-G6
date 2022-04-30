@@ -35,16 +35,17 @@ public class moverArriba extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la acción, se realizan las modificaciones en duplicado para ambos estados
-        Posicion posicionActual = estadoAgente.getPosicionAgente();
+        Posicion posicionActual = new Posicion(estadoAgente.getPosicionAgente());
         Posicion posicionNueva = new Posicion(0,0);
 
-        //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
+        //Chequeo si estoy en la fila de más arriba, no puedo moverme. Devuelvo el estado sin cambios
         if(posicionActual.getFila() == 1){
             return estadoAmbiente;
         }
 
         //Actualizo posicion de la planta
         posicionNueva.setFila(posicionActual.getFila()-1);
+        posicionNueva.setColumna(posicionActual.getColumna());
         estadoAgente.setFila(posicionNueva.getFila());
 
         AccionAuxiliar accionAux = new AccionAuxiliar();

@@ -76,7 +76,7 @@ public class Ambiente extends Environment{
         
         //Si un zombie traspasa la linea de meta, el juego termina
         for (Zombie zombie: estadoAmbiente.getZombies()) {
-            if(zombie.getPosicion().getColumna() < 0)
+            if(zombie.getPosicion().getColumna() < 1)
                 return true;
         }
         return false;

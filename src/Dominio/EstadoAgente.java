@@ -32,7 +32,7 @@ public class EstadoAgente extends SearchBasedAgentState {
 
     public EstadoAgente() {
         tablero = new int[6][10]; //todo tablero
-        posicionAgente = new Posicion(3, 1);
+        posicionAgente = new Posicion(5, 1);
         cantZombies = 0;
         soles = 0;
         girasoles = new ArrayList<>();
@@ -198,7 +198,8 @@ public class EstadoAgente extends SearchBasedAgentState {
     }
 
     private void actualizarListaGirasol(Posicion posicion, Integer valorCelda) {
-        this.girasoles.stream().filter(girasol -> girasol.getPosicion() == posicion).findFirst().get().setCantSoles(valorCelda);
+        Optional<Girasol> girasol = this.girasoles.stream().filter(g -> g.getPosicion() == posicion).findFirst();
+        girasol.ifPresent(g -> g.setCantSoles(valorCelda));
     }
 
     /**

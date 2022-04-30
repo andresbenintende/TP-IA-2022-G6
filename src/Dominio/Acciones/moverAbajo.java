@@ -35,7 +35,7 @@ public class moverAbajo extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la acción, se realizan las modificaciones en duplicado para ambos estados
-        Posicion posicionActual = estadoAgente.getPosicionAgente();
+        Posicion posicionActual = new Posicion(estadoAgente.getPosicionAgente());
         Posicion posicionNueva = new Posicion(0,0);
 
         //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
@@ -45,6 +45,7 @@ public class moverAbajo extends SearchAction {
 
         //Actualizo posicion de la planta
         posicionNueva.setFila(posicionActual.getFila()+1);
+        posicionNueva.setColumna(posicionActual.getColumna());
         estadoAgente.setFila(posicionActual.getFila());
 
         AccionAuxiliar accionAux = new AccionAuxiliar();

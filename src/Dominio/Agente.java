@@ -26,11 +26,11 @@ public class Agente extends SearchBasedAgent {
 
         // Creación de los operadores
         Vector<SearchAction> operadores = new Vector<>();
-        operadores.addElement(new noMover());
         operadores.addElement(new moverIzquierda());
         operadores.addElement(new moverArriba());
         operadores.addElement(new moverAbajo());
         operadores.addElement(new moverDerecha());
+        operadores.addElement(new noMover());
 
         // Creación del problema que deberá resolver el agente
         Problem problem = new Problem(goal, estadoAgente, operadores);

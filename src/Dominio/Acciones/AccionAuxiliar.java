@@ -59,22 +59,20 @@ public class AccionAuxiliar {
         //Una vez que logra moverse (o no), ejecuta las acciones auxiliares
         //valor del casillero al que la planta se moverá
         int valorCelda = (estadoAgente.getTablero()[posicionNueva.getFila()][posicionNueva.getColumna()]);
+        //Seteo la posición del agente en los estados
+        estadoAgente.setFila(posicionNueva.getFila());
+        estadoAgente.setColumna(posicionNueva.getColumna());
+        estadoAmbiente.setPosicionPlanta(posicionNueva);
 
         //Pierdo soles vs. zombie
         if (valorCelda < 0) {
             int solesQuitados = valorCelda * 2;
             int solesPlantaActualizados = estadoAgente.getSoles() + solesQuitados;
 
-            //Actualizo el estado del agente
+            //Actualizo la energía del agente
             estadoAgente.setSoles(solesPlantaActualizados);
-            //Actualizo el tablero
-            estadoAgente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), solesPlantaActualizados);
 
-            //Actualizo el estado del ambiente
-            estadoAmbiente.setPosicionPlanta(posicionNueva);
             estadoAmbiente.setSolesPlanta(solesPlantaActualizados);
-            //Actualizo el tablero
-            estadoAmbiente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), solesPlantaActualizados);
         }
 
         //Hay un girasol, entonces toma sus soles
@@ -85,14 +83,11 @@ public class AccionAuxiliar {
                 //Agente
                 estadoAgente.setSoles(estadoAgente.getSoles() + auxGirasol.get().getCantSoles());
                 estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().get().setCantSoles(0);
-                //Actualizo el tablero del agente
-                estadoAgente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), estadoAgente.getSoles());
-
+                estadoAgente.setPosicionTablero(auxGirasol.get().getPosicion().getFila(),auxGirasol.get().getPosicion().getColumna(),0);
                 //Ambiente
                 estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
                 estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().get().setCantSoles(0);
-                //Actualizo el tablero del ambiente
-                estadoAmbiente.setPosicionTablero(posicionNueva.getFila(), posicionNueva.getColumna(), estadoAgente.getSoles());
+                estadoAmbiente.setPosicionTablero(auxGirasol.get().getPosicion().getFila(),auxGirasol.get().getPosicion().getColumna(),0);
             }
         }
 
@@ -111,39 +106,32 @@ public class AccionAuxiliar {
                 estadoAgente.setSoles(estadoAgente.getSoles() + celdaAdy);
                 estadoAgente.getZombies().removeIf(zombie -> zombie.checkPosicion(posZombie));
                 estadoAgente.setCantZombies(estadoAgente.getCantZombies()-1);
-
                 //Actualizo el tablero
                 estadoAgente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(), 0);
-                estadoAgente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
 
                 //Actualizo el estado del AMBIENTE
                 estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
                 estadoAmbiente.getZombies().removeIf(zombie -> zombie.checkPosicion(posZombie));
                 //Actualizo el tablero
                 estadoAmbiente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(), 0);
-                estadoAmbiente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
             }
         }
 
-        //Siembro girasol
-        if (estadoAgente.getSoles() > 1) {
+        //Siembro girasol sólo si tengo energía suficiente y si no tengo detectado ningún zombie
+        if (estadoAgente.getSoles() > 1 && estadoAgente.getZombies().size() == 0) {
             //Actualizo el estado del AGENTE
-            //Ocupo un sol para sembrar un girasol
-            estadoAgente.setSoles(estadoAgente.getSoles() - 1);
-            //Añado el girasol a la lista de girasoles del agente
+            //Si no hay un girasol en la posición, añado el girasol a la lista
             if (!estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().isPresent()) {
+                //Ocupo un sol para sembrar un girasol
+                estadoAgente.setSoles(estadoAgente.getSoles() - 1);
                 estadoAgente.getGirasoles().add(new Girasol(posicionNueva, 0));
             }
-            //Actualizo el tablero
-            estadoAgente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
 
             //Actualizo el estado del AMBIENTE
-            estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
             if (!estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().isPresent()) {
+                estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
                 estadoAmbiente.getGirasoles().add(new Girasol(posicionNueva, 0));
             }
-            //Actualizo el tablero
-            estadoAmbiente.setPosicionTablero(estadoAgente.getFila(), estadoAgente.getColumna(), estadoAgente.getSoles());
         }
 
         //Actualizo el tablero en la posición anterior, si es que se movió
@@ -161,8 +149,6 @@ public class AccionAuxiliar {
                 estadoAmbiente.setPosicionTablero(posicionActual.getFila(), posicionActual.getColumna(), 0);
             }
         }
-
-
         return estadoAmbiente;
     }
 }

@@ -50,7 +50,7 @@ public class EstadoAmbiente extends EnvironmentState {
          * SETEO MANUAL (PARA PRUEBAS)
          */
 
-        setPosicionPlanta(new Posicion(3,1));
+        setPosicionPlanta(new Posicion(5,1));
         setSolesPlanta(8);
         setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
         zombies.add(new Zombie(new Posicion(1,2),-2));

@@ -55,7 +55,7 @@ public class EstadoAmbiente extends EnvironmentState {
         setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
         zombies.add(new Zombie(new Posicion(1,2),-2));
         zombies.forEach(zombie -> {
-            zombie.setProxMov(2);
+            zombie.setProxMov(3);
             setPosicionTablero(zombie.getPosicion().getFila(),zombie.getPosicion().getColumna(),zombie.getPoder());
         });
 
@@ -129,6 +129,10 @@ public class EstadoAmbiente extends EnvironmentState {
 
                     posZombie.setColumna(posZombie.getColumna() - 1);
                     zombie.setPosicion(posZombie);
+                    //todo actualizar la posicion del zoombie en el tablero, no lo puedo percibir sino
+                    this.setPosicionTablero(posZombie.getFila(),posZombie.getColumna(),zombie.getPoder());
+                    this.setPosicionTablero(posZombie.getFila(),posZombie.getColumna()+1,0);
+
                     //Si en esa posición hay un girasol lo elimina
                     if(this.getTablero()[posZombie.getFila()][posZombie.getColumna() ] > 0){
                             quitarSoles(posZombie);
@@ -150,6 +154,8 @@ public class EstadoAmbiente extends EnvironmentState {
     public void generarSolesGirasol(){
         for (Girasol girasol : girasoles){
             girasol.setCantSoles(girasol.getCantSoles()+Aleatorio.nroRandom(1,3));
+            //actualizo la energia de los girasoles en el tablero
+            setPosicionTablero(girasol.getPosicion().getFila(),girasol.getPosicion().getColumna(),girasol.getCantSoles());
         }
 
     }

@@ -65,8 +65,7 @@ public class Ambiente extends Environment{
     @Override
     public boolean agentFailed(Action actionReturned) {
 
-        EstadoAmbiente estadoAmbiente =
-                this.getEnvironmentState();
+        EstadoAmbiente estadoAmbiente =this.getEnvironmentState();
 
         int energiaPlanta = estadoAmbiente.getSolesPlanta();
 
@@ -83,22 +82,18 @@ public class Ambiente extends Environment{
     }
 
     public List<Integer> getCeldasArriba(Posicion pos) {
-        return ((EstadoAmbiente) this.environmentState)
-                .getCeldasArriba(pos);
+        return ((EstadoAmbiente) this.environmentState).getCeldasArriba(pos);
     }
 
     public List<Integer> getCeldasIzq(Posicion pos) {
-        return ((EstadoAmbiente) this.environmentState)
-                .getCeldasIzq(pos);
+        return ((EstadoAmbiente) this.environmentState).getCeldasIzq(pos);
     }
 
     public List<Integer> getCeldasDer(Posicion pos) {
-        return ((EstadoAmbiente) this.environmentState)
-                .getCeldasDer(pos);
+        return ((EstadoAmbiente) this.environmentState).getCeldasDer(pos);
     }
 
     public List<Integer> getCeldasAbajo(Posicion pos) {
-        return ((EstadoAmbiente) this.environmentState)
-                .getCeldasAbajo(pos);
+        return ((EstadoAmbiente) this.environmentState).getCeldasAbajo(pos);
     }
 }

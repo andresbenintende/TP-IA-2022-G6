@@ -120,18 +120,22 @@ public class AccionAuxiliar {
         //Siembro girasol sólo si tengo energía suficiente y si no tengo detectado ningún zombie
         if (estadoAgente.getSoles() > 1 && estadoAgente.getZombies().size() == 0) {
             //Actualizo el estado del AGENTE
+            //todo deberia ser atomico
             //Si no hay un girasol en la posición, añado el girasol a la lista
             if (!estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().isPresent()) {
                 //Ocupo un sol para sembrar un girasol
                 estadoAgente.setSoles(estadoAgente.getSoles() - 1);
                 estadoAgente.getGirasoles().add(new Girasol(posicionNueva, 0));
+                estadoAgente.setPosicionTablero(posicionNueva.getFila(),posicionNueva.getColumna(),0);
             }
 
             //Actualizo el estado del AMBIENTE
             if (!estadoAmbiente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicionNueva)).findFirst().isPresent()) {
                 estadoAmbiente.setSolesPlanta(estadoAgente.getSoles());
                 estadoAmbiente.getGirasoles().add(new Girasol(posicionNueva, 0));
+                estadoAmbiente.setPosicionTablero(posicionNueva.getFila(),posicionNueva.getColumna(),0);
             }
+
         }
 
         //Actualizo el tablero en la posición anterior, si es que se movió
@@ -145,6 +149,7 @@ public class AccionAuxiliar {
                 estadoAmbiente.setPosicionTablero(posZombie.getFila(), posZombie.getColumna(), zombieAux.get().getPoder());
             }
             else {
+                //todo hay que hacer esto??
                 estadoAgente.setPosicionTablero(posicionActual.getFila(), posicionActual.getColumna(), 0);
                 estadoAmbiente.setPosicionTablero(posicionActual.getFila(), posicionActual.getColumna(), 0);
             }

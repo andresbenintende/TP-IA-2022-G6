@@ -50,27 +50,29 @@ public class EstadoAmbiente extends EnvironmentState {
          * SETEO MANUAL (PARA PRUEBAS)
          */
 
-        setPosicionPlanta(new Posicion(5,1));
-        setSolesPlanta(8);
-        setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
-        zombies.add(new Zombie(new Posicion(1,2),-2));
-        zombies.forEach(zombie -> {
-            zombie.setProxMov(3);
-            setPosicionTablero(zombie.getPosicion().getFila(),zombie.getPosicion().getColumna(),zombie.getPoder());
-        });
-
+//        setPosicionPlanta(new Posicion(5,1));
+//        setSolesPlanta(20);
+//        setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
+//        zombies.add(new Zombie(new Posicion(4,8),-2));
+//        zombies.add(new Zombie(new Posicion(2,8),-3));
+//        zombies.add(new Zombie(new Posicion(2,9),-4));
+//        zombies.add(new Zombie(new Posicion(1,9),-4));
+//        zombies.forEach(zombie -> {
+//            zombie.setProxMov(0);
+//            setPosicionTablero(zombie.getPosicion().getFila(),zombie.getPosicion().getColumna(),zombie.getPoder());
+//        });
 
         /**
          * SETEO AUTOMATICO (RANDOM)
          */
-     //   inicializarPlanta();
-     //   inicializarZombies();
+        inicializarPlanta();
+        inicializarZombies();
     }
 
     private void inicializarPlanta() {
         //Setear posicion random de la planta
        //this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(1, 5),1));  //TODO SI EL TABLERO ESTA REFERENCIADO A 1,1 COMO VERTICE INICIAL
-        this.setPosicionPlanta(new Posicion(3,1));
+        this.setPosicionPlanta(new Posicion(5,1));
         //Setear cant soles random de la planta
         this.setSolesPlanta(Aleatorio.nroRandom(2,20));
 
@@ -90,6 +92,14 @@ public class EstadoAmbiente extends EnvironmentState {
             //               (como si se tratase de una cola de espera)
 
             Posicion posicion = new Posicion(Aleatorio.nroRandom(1,5), 9);
+
+            //No puede haber más de un zombie por fila con el mismo poder
+            do {
+                posicion.setFila(posicion.getFila()+1);
+                if(posicion.getFila() == 5){
+                    posicion.setFila(1);
+                }
+            }while(tablero[posicion.getFila()][posicion.getColumna()] == zombie.getPoder());
 
             //HAY UN ZOMBIE EN LA POSICION LO TIRO PARA ATRAS
             if(tablero[posicion.getFila()][posicion.getColumna()] < 0){

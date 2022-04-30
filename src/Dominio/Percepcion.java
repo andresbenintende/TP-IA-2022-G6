@@ -15,7 +15,7 @@ public class Percepcion extends Perception {
     private List<Integer> sensorArriba;
     private List<Integer> sensorDer;
     private List<Integer> sensorAbajo;
-    private int energiaSoles;
+    private int energiaAgente;
     private int cantidadZombies;
 
     public Percepcion() {
@@ -48,7 +48,7 @@ public class Percepcion extends Perception {
         this.setSensorIzq(estadoAmbiente.getCeldasIzq(pos));
         this.setSensorDer(estadoAmbiente.getCeldasDer(pos));
         this.setSensorAbajo(estadoAmbiente.getCeldasAbajo(pos));
-        this.setEnergiaSoles(estadoAmbiente.getSolesPlanta());
+        this.setEnergiaAgente(estadoAmbiente.getSolesPlanta());
         this.setCantidadZombies(estadoAmbiente.getCantidadZombies());
     }
 
@@ -78,18 +78,18 @@ public class Percepcion extends Perception {
     public void setSensorAbajo(List<Integer> sensorAbajo) {
         this.sensorAbajo = sensorAbajo;
     }
-    public int getEnergiaSoles() {
-        return energiaSoles;
+    public int getEnergiaAgente() {
+        return energiaAgente;
     }
-    public void setEnergiaSoles(int energiaSoles) {
-        this.energiaSoles = energiaSoles;
+    public void setEnergiaAgente(int energiaAgente) {
+        this.energiaAgente = energiaAgente;
     }
 
     @Override
     public String toString() {
         StringBuffer str = new StringBuffer();
 
-        str.append("Soles: ").append(this.energiaSoles);
+        str.append("Soles: ").append(this.energiaAgente);
         str.append("; ");
         str.append("Sensor Izquierdo: " + this.sensorIzq);
         str.append("; ");

@@ -3,7 +3,6 @@ package Dominio;
 import frsf.cidisi.faia.agent.Action;
 import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
-import frsf.cidisi.faia.state.EnvironmentState;
 
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class Ambiente extends Environment{
         perception.setSensorDer(this.getCeldasDer(pos));
         perception.setSensorAbajo(this.getCeldasAbajo(pos));
         perception.setCantidadZombies(this.getEnvironmentState().getCantidadZombies());
-        perception.setEnergiaSoles(this.getEnvironmentState().getSolesPlanta());
+        perception.setEnergiaAgente(this.getEnvironmentState().getSolesPlanta());
 
         // Devuelve la percepción
         return perception;

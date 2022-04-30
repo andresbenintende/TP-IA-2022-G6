@@ -18,7 +18,12 @@ public class noMover extends SearchAction {
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
 
-        return accionAux.executeAux(estadoAgente,posicion);
+        estadoAgente.getCeldasVisitadas().add(posicion);
+
+        accionAux.executeAux(estadoAgente,posicion);
+        if(estadoAgente.getSoles() < 1)
+            return null;
+        return estadoAgente;
     }
 
     @Override

@@ -26,10 +26,10 @@ public class Agente extends SearchBasedAgent {
 
         // Creación de los operadores
         Vector<SearchAction> operadores = new Vector<>();
-        operadores.addElement(new moverIzquierda());
         operadores.addElement(new moverArriba());
-        operadores.addElement(new moverAbajo());
         operadores.addElement(new moverDerecha());
+        operadores.addElement(new moverAbajo());
+        operadores.addElement(new moverIzquierda());
         operadores.addElement(new noMover());
 
         // Creación del problema que deberá resolver el agente
@@ -45,7 +45,8 @@ public class Agente extends SearchBasedAgent {
 
         // Creación de la estrategia de búsqueda
 
-        DepthFirstSearch estrategia = new DepthFirstSearch();
+        IStepCostFunction costo = new FuncionCosto();
+        UniformCostSearch estrategia = new UniformCostSearch(costo);
 
         /**
          * Estrategias de búsqueda:

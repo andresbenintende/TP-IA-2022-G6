@@ -14,15 +14,17 @@ public class EstadoAgente extends SearchBasedAgentState {
 
     private int[][] tablero;
     private Posicion posicionAgente;
+    private List<Posicion> celdasVisitadas;
     private int cantZombies;
     private List<Zombie> zombies;
     private List<Girasol> girasoles;
     private int soles;
     private boolean seMueve;
 
-    public EstadoAgente(int[][] t, Posicion p, int c, List<Zombie> z, List<Girasol> g, int s, boolean m) {
+    public EstadoAgente(int[][] t, Posicion p, List<Posicion> v, int c, List<Zombie> z, List<Girasol> g, int s, boolean m) {
         tablero = t;
         posicionAgente = p;
+        celdasVisitadas = v;
         cantZombies = c;
         zombies = z;
         girasoles = g;
@@ -33,6 +35,7 @@ public class EstadoAgente extends SearchBasedAgentState {
     public EstadoAgente() {
         tablero = new int[6][10]; //todo tablero
         posicionAgente = new Posicion(5, 1);
+        celdasVisitadas = new ArrayList<>();
         cantZombies = 0;
         soles = 0;
         girasoles = new ArrayList<>();
@@ -69,7 +72,14 @@ public class EstadoAgente extends SearchBasedAgentState {
 
         Posicion nuevaPosicion = new Posicion(posicionAgente);
 
-        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, nuevaPosicion, this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles, this.seMueve);
+        List<Posicion> nuevasceldasVisitadas = new ArrayList<>();
+
+        for (Posicion pos : celdasVisitadas
+             ) {
+            nuevasceldasVisitadas.add(new Posicion(pos.getFila(),pos.getColumna()));
+        }
+
+        EstadoAgente nuevoEstado = new EstadoAgente(nuevoTablero, nuevaPosicion, nuevasceldasVisitadas,  this.cantZombies, nuevosZombies, nuevosGirasoles, this.soles, this.seMueve);
 
         return nuevoEstado;
     }
@@ -115,7 +125,7 @@ public class EstadoAgente extends SearchBasedAgentState {
         }
 
         cantZombies = percepcion.getCantidadZombies();
-        soles = percepcion.getEnergiaSoles();
+        soles = percepcion.getEnergiaAgente();
     }
 
 
@@ -335,6 +345,14 @@ public class EstadoAgente extends SearchBasedAgentState {
     }
     public void setSeMueve(boolean movimiento) {
         this.seMueve = movimiento;
+    }
+
+    public List<Posicion> getCeldasVisitadas() {
+        return celdasVisitadas;
+    }
+
+    public void setCeldasVisitadas(List<Posicion> celdasVisitadas) {
+        this.celdasVisitadas = celdasVisitadas;
     }
 }
 

@@ -16,16 +16,28 @@ public class moverAbajo extends SearchAction {
 
         Posicion posicion = new Posicion(estadoAgente.getPosicionAgente());
 
-        //Chequeo si estoy en la fila de más abajo, no puedo moverme. Devuelvo null
-        if(posicion.getFila() == 5)
+        //Chequeo si estoy en la fila de más abajo o hay un zombie, no puedo moverme. Devuelvo null
+        if(posicion.getFila() == 5 || estadoAgente.getPosicionTablero(posicion.getFila()+1,posicion.getColumna()) < 0)
+            return null;
+
+        //Si hay un zombie en la fila actual, no se cambia de fila
+        if(estadoAgente.getZombies().stream().anyMatch(zombie -> zombie.getPosicion().getFila() == posicion.getFila()))
             return null;
 
         posicion.setFila(posicion.getFila()+1);
+        //Si ya la visitó, no vuelve
+        if(estadoAgente.getCeldasVisitadas().stream().anyMatch(pos -> pos.checkPosicion(posicion)))
+            return null;
+        else
+            estadoAgente.getCeldasVisitadas().add(posicion);
         estadoAgente.setFila(posicion.getFila());
         estadoAgente.setSeMueve(true);
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
-        return accionAux.executeAux(estadoAgente,posicion);
+        accionAux.executeAux(estadoAgente,posicion);
+        if(estadoAgente.getSoles() < 1)
+            return null;
+        return estadoAgente;
     }
     @Override
     public EnvironmentState execute(AgentState ast, EnvironmentState est) {
@@ -53,7 +65,7 @@ public class moverAbajo extends SearchAction {
     }
     @Override
     public Double getCost() {
-        return 0.0;
+        return 1.0;
     }
     @Override
     public String toString() {

@@ -16,17 +16,28 @@ public class moverDerecha extends SearchAction {
 
         Posicion posicion = new Posicion(estadoAgente.getPosicionAgente());
 
-        //Chequeo si estoy en la columna de más a la derecha, no puedo moverme. Devuelvo null
-        if(posicion.getColumna() == 9)
+        //Chequeo si estoy en la columna de más a la derecha o hay un zombie, no puedo moverme. Devuelvo null
+        if(posicion.getColumna() == 9 || estadoAgente.getPosicionTablero(posicion.getFila(),posicion.getColumna()+1) < 0)
+            return null;
+
+        //Si hay un zombie en la columna actual, no se cambia de columna
+        if(estadoAgente.getZombies().stream().anyMatch(zombie -> zombie.getPosicion().getColumna() == posicion.getColumna()))
             return null;
 
         posicion.setColumna(posicion.getColumna()+1);
-
+        //Si ya la visitó, no vuelve
+        if(estadoAgente.getCeldasVisitadas().stream().anyMatch(pos -> pos.checkPosicion(posicion)))
+            return null;
+        else
+            estadoAgente.getCeldasVisitadas().add(posicion);
         estadoAgente.setColumna(posicion.getColumna());
         estadoAgente.setSeMueve(true);
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
-        return accionAux.executeAux(estadoAgente,posicion);
+        accionAux.executeAux(estadoAgente,posicion);
+        if(estadoAgente.getSoles() < 1)
+            return null;
+        return estadoAgente;
     }
 
     @Override
@@ -56,7 +67,7 @@ public class moverDerecha extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 0.0;
+        return 2.0;
     }
     @Override
     public String toString() {

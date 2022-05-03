@@ -45,9 +45,8 @@ public class Agente extends SearchBasedAgent {
 
         // Creación de la estrategia de búsqueda
 
-        IStepCostFunction costo = new FuncionCosto();
-        UniformCostSearch estrategia = new UniformCostSearch(costo);
-
+     //Búsqueda en profundidad
+        BreathFirstSearch estrategia = new BreathFirstSearch();
         /**
          * Estrategias de búsqueda:
          *

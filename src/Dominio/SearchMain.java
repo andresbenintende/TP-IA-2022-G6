@@ -12,5 +12,7 @@ public class SearchMain {
         SearchBasedAgentSimulator simulator = new SearchBasedAgentSimulator(ambiente, agente);
 
         simulator.start();
+
+
     }
 }

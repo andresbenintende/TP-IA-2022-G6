@@ -74,7 +74,7 @@ public class EstadoAmbiente extends EnvironmentState {
        //this.setPosicionPlanta(new Posicion(Aleatorio.nroRandom(1, 5),1));  //TODO SI EL TABLERO ESTA REFERENCIADO A 1,1 COMO VERTICE INICIAL
         this.setPosicionPlanta(new Posicion(5,1));
         //Setear cant soles random de la planta
-        this.setSolesPlanta(Aleatorio.nroRandom(2,20));
+        this.setSolesPlanta(Aleatorio.nroRandom(12,20));
 
         //Guardamos la posicion de la planta en el tablero
         this.tablero[posicionPlanta.getFila()][posicionPlanta.getColumna()] = this.getSolesPlanta();
@@ -84,7 +84,7 @@ public class EstadoAmbiente extends EnvironmentState {
         crearZombies();
         for(Zombie zombie : zombies){
             zombie.setPoder(Aleatorio.nroRandom(-5,-1));
-            zombie.setProxMov(Aleatorio.nroRandom(1,2)); //Se setea este valor para que el zombie no se mueva en el primer ciclo de percepcion
+            zombie.setProxMov(Aleatorio.nroRandom(1,3)); //Se setea este valor para que el zombie no se mueva en el primer ciclo de percepcion
             //Seteo de posición:
             // Fila: aleatoriamente entre 0 y 4
             // Columna: por defecto se setea en 8.
@@ -120,7 +120,7 @@ public class EstadoAmbiente extends EnvironmentState {
     }
 
     private void crearZombies() {
-       int cantZombies = Aleatorio.nroRandom(4,5);//todo aleatorio zombies corregir
+       int cantZombies = Aleatorio.nroRandom(3,5);//todo aleatorio zombies corregir
         for (int z= 1; z<=cantZombies; z++){
             zombies.add(new Zombie());
         }
@@ -251,7 +251,7 @@ public class EstadoAmbiente extends EnvironmentState {
 
     public List<Integer> getCeldasDer(Posicion p) {
         Posicion pos = new Posicion(p.getFila(),p.getColumna());
-        if (pos.getFila() == 9) {
+        if (pos.getColumna() == 9) {    //bug
             return new ArrayList<>(); //límite del tablero
         }
         List<Integer> celdas = new ArrayList<>();

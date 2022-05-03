@@ -1,16 +1,23 @@
 package Dominio;
 
+import Interface.Ventana;
 import frsf.cidisi.faia.agent.Action;
 import frsf.cidisi.faia.agent.Perception;
 import frsf.cidisi.faia.environment.Environment;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Ambiente extends Environment{
 
+    Ventana ventana;
     public Ambiente() {
         // Create the environment state
         this.environmentState = new EstadoAmbiente();
+
+        ventana = new Ventana(this.getEnvironmentState());
+        ventana.setVisible(true);
+
     }
 
     @Override
@@ -43,6 +50,14 @@ public class Ambiente extends Environment{
         perception.setSensorAbajo(this.getCeldasAbajo(pos));
         perception.setCantidadZombies(this.getEnvironmentState().getCantidadZombies());
         perception.setEnergiaAgente(this.getEnvironmentState().getSolesPlanta());
+
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        ventana.actualizar(this.getEnvironmentState());
+        ventana.repaint();
 
         // Devuelve la percepción
         return perception;

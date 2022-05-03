@@ -150,7 +150,8 @@ public class EstadoAgente extends SearchBasedAgentState {
                 } else {
                     //Se escapó un zombie y tengo que "moverlo" manualmente
                     Posicion posicionAux = new Posicion(posicionInformada.getFila(), posicionInformada.getColumna() - 1);
-                    this.zombies.stream().filter(zombie -> zombie.getPosicion() == posicionInformada).findFirst().get().setPosicion(posicionAux);
+                    Optional<Zombie> zombieAux= this.zombies.stream().filter(zombie -> zombie.getPosicion() == posicionInformada).findFirst();
+                    if(zombieAux.isPresent()) {zombieAux.get().setPosicion(posicionAux);}
 
                     //Actualizo el tablero en este punto para el movimiento manual
                     tablero[posicionAux.getFila()][posicionAux.getColumna()] = valorCelda;

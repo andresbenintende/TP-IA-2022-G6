@@ -26,7 +26,6 @@ public class Ventana  extends JFrame {
     }
 
     public void init(EstadoAmbiente estadoAmbiente) {
-        System.out.println("----------------------------------------------------");
 
         //PANEL PRINCIPAL
         JPanel panelPrincipal= new JPanel();
@@ -37,8 +36,6 @@ public class Ventana  extends JFrame {
         //DIBUJAR ZOMBIES
 
         estadoAmbiente.getZombies().forEach(z->{
-            System.out.println("dibujar zombie");
-
             JLabel zombie = new JLabel();
             ImageIcon zombieIcon= new ImageIcon("src/Interface/Imagenes/zombie1.png");
             switch((z.getPoder())) {
@@ -58,9 +55,6 @@ public class Ventana  extends JFrame {
                 case -5:
                     zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie5.png");
                     break;
-                case -6:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie6.png");
-                    break;
             }
 
             zombie.setIcon(new ImageIcon(zombieIcon.getImage().getScaledInstance(80, 80, 0)));
@@ -75,7 +69,7 @@ public class Ventana  extends JFrame {
 
         //DIBUJAR AGENTE
         JLabel planta = new JLabel();
-        ImageIcon plantaIcon = new ImageIcon("src/Interface/Imagenes/planta.png");
+        ImageIcon plantaIcon = new ImageIcon("src/Interface/Imagenes/planta1.png");
 
         planta.setIcon(new ImageIcon(plantaIcon.getImage().getScaledInstance(80, 80, 0)));
         planta.setBounds((estadoAmbiente.getPosicionPlanta().getColumna()-1)*115, (estadoAmbiente.getPosicionPlanta().getFila()-1)*100, 80, 80); // le sumo 70 en x para avanzar y 80 en y
@@ -91,8 +85,7 @@ public class Ventana  extends JFrame {
 
             girasol.setIcon(new ImageIcon(girasolIcon.getImage().getScaledInstance(80, 80, 0)));
 
-            girasol.setBounds(115*(g.getPosicion().getColumna()-1), 100*(g.getPosicion().getColumna()-1), 80, 80);
-
+           girasol.setBounds(115*(g.getPosicion().getColumna()-1), 100*(g.getPosicion().getFila()-1), 80, 80);
             panelPrincipal.add(girasol);
 
 
@@ -128,31 +121,27 @@ public class Ventana  extends JFrame {
         //DIBUJAR ZOMBIES
 
         estadoAmbiente.getZombies().forEach(z->{
-            System.out.println("dibujar zombie");
 
             JLabel zombie = new JLabel();
-            ImageIcon zombieIcon= new ImageIcon("src/Interface/Imagenes/zombie1.png");
-            switch((z.getPoder())) {
+            ImageIcon zombieIcon= new ImageIcon("src/Interface/Imagenes/zombies/zombie1.png");
+        /*    switch((z.getPoder())) {
 
-                case 1:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie1.png");
+                case -1:
+                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombies/zombie1.png");
                     break;
-                case 2:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie2.png");
+                case -2:
+                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombies/zombie2.png");
                     break;
-                case 3:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie3.png");
+                case -3:
+                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombies/zombie3.png");
                     break;
-                case 4:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie4.png");
+                case -4:
+                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombies/zombie4.png");
                     break;
-                case 5:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie5.png");
+                case -5:
+                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombies/zombie5.png");
                     break;
-                case 6:
-                    zombieIcon = new ImageIcon("src/Interface/Imagenes/zombie6.png");
-                    break;
-            }
+            }*/
 
             zombie.setIcon(new ImageIcon(zombieIcon.getImage().getScaledInstance(80, 80, 0)));
 
@@ -166,7 +155,7 @@ public class Ventana  extends JFrame {
 
         //DIBUJAR AGENTE
         JLabel planta = new JLabel();
-        ImageIcon plantaIcon = new ImageIcon("src/Interface/Imagenes/planta.png");
+        ImageIcon plantaIcon = new ImageIcon("src/Interface/Imagenes/planta1.png");
 
         planta.setIcon(new ImageIcon(plantaIcon.getImage().getScaledInstance(80, 80, 0)));
         planta.setBounds((estadoAmbiente.getPosicionPlanta().getColumna()-1)*115, (estadoAmbiente.getPosicionPlanta().getFila()-1)*100, 80, 80); // le sumo 70 en x para avanzar y 80 en y
@@ -182,7 +171,7 @@ public class Ventana  extends JFrame {
 
             girasol.setIcon(new ImageIcon(girasolIcon.getImage().getScaledInstance(80, 80, 0)));
 
-            girasol.setBounds(115*(g.getPosicion().getColumna()-1), 100*(g.getPosicion().getColumna()-1), 80, 80);
+            girasol.setBounds((g.getPosicion().getColumna()-1)*115, (g.getPosicion().getFila()-1)*100, 80, 80);
 
             panelPrincipal.add(girasol);
 

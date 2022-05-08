@@ -63,17 +63,19 @@ public class EstadoAmbiente extends EnvironmentState {
          * SETEO MANUAL (PARA PRUEBAS)
          */
 
-//        setPosicionPlanta(new Posicion(5,1));
-//        setSolesPlanta(20);
-//        setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
-//        zombies.add(new Zombie(new Posicion(4,8),-2));
-//        zombies.add(new Zombie(new Posicion(2,8),-3));
-//        zombies.add(new Zombie(new Posicion(2,9),-4));
-//        zombies.add(new Zombie(new Posicion(1,9),-4));
-//        zombies.forEach(zombie -> {
-//            zombie.setProxMov(0);
-//            setPosicionTablero(zombie.getPosicion().getFila(),zombie.getPosicion().getColumna(),zombie.getPoder());
-//        });
+      /*  setPosicionPlanta(new Posicion(5,1));
+
+        setPosicionTablero(getPosicionPlanta().getFila(),getPosicionPlanta().getColumna(),getSolesPlanta());
+        zombies.add(new Zombie(new Posicion(2,10),-2));
+      zombies.forEach(zombie -> {
+            zombie.setProxMov(20);
+            setPosicionTablero(zombie.getPosicion().getFila(),zombie.getPosicion().getColumna(),zombie.getPoder());
+        });
+      Posicion pgirasol= new Posicion(3,1);
+      Girasol g = new Girasol(pgirasol,10);
+       //setPosicionTablero(g.getPosicion().getFila(),g.getPosicion().getColumna(),g.getCantSoles());
+       //girasoles.add(g);
+*/
 
         /**
          * SETEO AUTOMATICO (RANDOM)

@@ -33,7 +33,7 @@ public class noMover extends SearchAction {
 
         //------------------------------------------------------------------------------------------------------
         //Cuando se decide ejecutar la acción, se realizan las modificaciones en duplicado para ambos estados
-        Posicion posicion = estadoAgente.getPosicionAgente();
+        Posicion posicion = new Posicion(estadoAgente.getPosicionAgente().getFila(),estadoAgente.getPosicionAgente().getColumna());
 
         AccionAuxiliar accionAux = new AccionAuxiliar();
         //Se pasa la misma posición porque la planta no se mueve

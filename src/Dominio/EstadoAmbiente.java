@@ -21,6 +21,19 @@ public class EstadoAmbiente extends EnvironmentState {
         tablero = m;
     }
 
+    public EstadoAmbiente(boolean aleatorio, Integer solesIniciales, List<Zombie> zombiesList){
+        if(aleatorio){
+            tablero = new int[6][11]; //todo tablero
+            zombies= new ArrayList<>();
+            girasoles = new ArrayList<>();
+            this.initState();
+        }
+        else{
+            //TODO
+        }
+
+    }
+
     public EstadoAmbiente() {
         tablero = new int[6][11]; //todo tablero
         zombies= new ArrayList<>();
@@ -167,7 +180,6 @@ public class EstadoAmbiente extends EnvironmentState {
             //actualizo la energia de los girasoles en el tablero
             setPosicionTablero(girasol.getPosicion().getFila(),girasol.getPosicion().getColumna(),girasol.getCantSoles());
         }
-
     }
 
     /**

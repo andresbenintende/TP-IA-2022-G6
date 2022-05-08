@@ -22,10 +22,7 @@ public class AccionAuxiliar {
         //Hay un girasol, entonces toma sus soles
         if (valorCelda > 0) {
             estadoAgente.setSoles(estadoAgente.getSoles() + valorCelda);
-           Optional<Girasol> g = estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst();
-            if(g.isPresent()){
-                g.get().setCantSoles(0);
-            }
+            estadoAgente.getGirasoles().stream().filter(girasol -> girasol.checkPosicion(posicion)).findFirst().get().setCantSoles(0);
             estadoAgente.setPosicionTablero(posicion.getFila(), posicion.getColumna(), 0);
         }
         //Busco zombies en las posiciones adyacentes

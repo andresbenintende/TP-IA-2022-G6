@@ -209,7 +209,7 @@ public class EstadoAgente extends SearchBasedAgentState {
     }
 
     private void actualizarListaGirasol(Posicion posicion, Integer valorCelda) {
-        Optional<Girasol> girasol = this.girasoles.stream().filter(g -> g.checkPosicion(posicion)).findFirst();
+        Optional<Girasol> girasol = this.girasoles.stream().filter(g -> g.getPosicion() == posicion).findFirst();
         girasol.ifPresent(g -> g.setCantSoles(valorCelda));
     }
 

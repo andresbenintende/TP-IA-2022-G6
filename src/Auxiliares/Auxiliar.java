@@ -38,4 +38,9 @@ public class Auxiliar {
         }
         return  posicionZombie;
     }
+
+    public static int calcularDistancia(Posicion agente, Posicion zombie){
+        return (Math.abs(zombie.getColumna())- agente.getColumna()) + Math.abs(zombie.getFila()- agente.getFila());
+
+    }
 }

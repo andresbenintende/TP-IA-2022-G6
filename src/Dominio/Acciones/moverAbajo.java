@@ -65,7 +65,7 @@ public class moverAbajo extends SearchAction {
     }
     @Override
     public Double getCost() {
-        return 1.0;
+        return 10.0;
     }
     @Override
     public String toString() {

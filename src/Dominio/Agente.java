@@ -46,7 +46,10 @@ public class Agente extends SearchBasedAgent {
         // Creación de la estrategia de búsqueda
 
      //Búsqueda en profundidad
-        BreathFirstSearch estrategia = new BreathFirstSearch();
+        // Búsqueda A*:
+          IStepCostFunction costo = new FuncionCosto();
+         IEstimatedCostFunction heurística = new Heuristica();
+          AStarSearch estrategia = new AStarSearch(costo, heurística);
         /**
          * Estrategias de búsqueda:
          *
@@ -66,7 +69,7 @@ public class Agente extends SearchBasedAgent {
          * AStarSearch estrategia = new AStarSearch(costo, heurística);
          *
          * Greedy Search:
-         * IEstimatedCostFunction heurística = new Heuristic();
+         * IEstimatedCostFunction heurística = new Heuristica();
          * GreedySearch estrategia = new GreedySearch(heurística);
          */
 

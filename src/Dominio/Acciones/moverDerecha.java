@@ -67,7 +67,7 @@ public class moverDerecha extends SearchAction {
 
     @Override
     public Double getCost() {
-        return 2.0;
+        return 50.0;
     }
     @Override
     public String toString() {

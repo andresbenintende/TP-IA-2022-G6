@@ -16,6 +16,8 @@ public class VentanaJuego extends JFrame{
     private final Font fuenteEstrategia = new Font("Niagaraphobia", Font.PLAIN, 40);
     private final Font fuenteGrande = new Font("Niagaraphobia", Font.ITALIC, 60);
 
+    private static final ImageIcon icon = new ImageIcon("src/UI/img/icon.png");
+
     String estrategia;
 
     JPanel panelPrincipal = new JPanel();
@@ -25,6 +27,8 @@ public class VentanaJuego extends JFrame{
     }
 
     public void iniciarVentana(EstadoAmbiente estadoAmbiente, String estrategiaBusqueda) {
+
+        this.setIconImage(icon.getImage());
 
         panelPrincipal = new JPanel();
         panelPrincipal.setBounds(0, 0, 1167, 500);

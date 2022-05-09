@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 
 public class Agente extends SearchBasedAgent {
 
-    Search busquedaSolver;
     int estrategia;
 
     public Agente() {
@@ -51,6 +50,42 @@ public class Agente extends SearchBasedAgent {
      */
     @Override
     public Action selectAction() {
+
+        Strategy estrategyAux;
+
+        switch (estrategia) {
+            case 0:
+                DepthFirstSearch e1 = new DepthFirstSearch();
+                estrategyAux = e1;
+                break;
+            case 1:
+                BreathFirstSearch e2 = new BreathFirstSearch();
+                estrategyAux = e2;
+                break;
+            case 2:
+                IStepCostFunction c1 = new FuncionCosto();
+                UniformCostSearch e3 = new UniformCostSearch(c1);
+                estrategyAux = e3;
+            case 3:
+                IStepCostFunction c2 = new FuncionCosto();
+                IEstimatedCostFunction h1 = new Heuristica();
+                AStarSearch e4 = new AStarSearch(c2, h1);
+                estrategyAux = e4;
+                break;
+            case 4:
+                IEstimatedCostFunction h2 = new Heuristica();
+                GreedySearch e5 = new GreedySearch(h2);
+                estrategyAux = e5;
+                break;
+            default:
+                DepthFirstSearch edefault = new DepthFirstSearch();
+                estrategyAux = edefault;
+                break;
+
+        }
+
+        Search busquedaSolver = new Search(estrategyAux);
+
         busquedaSolver.setVisibleTree(Search.EFAIA_TREE);
 
         // Configura el solucionador de problemas
@@ -80,31 +115,7 @@ public class Agente extends SearchBasedAgent {
 
     public void setEstrategiaBusqueda(int indexEstrategia) {
         estrategia = indexEstrategia;
-        switch (indexEstrategia) {
-            case 0:
-                DepthFirstSearch e1 = new DepthFirstSearch();
-                busquedaSolver = new Search(e1);
-                break;
-            case 1:
-                BreathFirstSearch e2 = new BreathFirstSearch();
-                busquedaSolver = new Search(e2);
-                break;
-            case 2:
-                IStepCostFunction c1 = new FuncionCosto();
-                UniformCostSearch e3 = new UniformCostSearch(c1);
-                busquedaSolver = new Search(e3);
-            case 3:
-                IStepCostFunction c2 = new FuncionCosto();
-                IEstimatedCostFunction h1 = new Heuristica();
-                AStarSearch e4 = new AStarSearch(c2, h1);
-                busquedaSolver = new Search(e4);
-                break;
-            case 4:
-                IEstimatedCostFunction h2 = new Heuristica();
-                GreedySearch e5 = new GreedySearch(h2);
-                busquedaSolver = new Search(e5);
-                break;
-        }
+
     }
 
     public String getEstrategiaBusqueda() {

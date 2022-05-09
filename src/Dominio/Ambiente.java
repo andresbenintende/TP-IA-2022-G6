@@ -49,7 +49,7 @@ public class Ambiente extends Environment{
         perception.setEnergiaAgente(this.getEnvironmentState().getSolesPlanta());
 
         try {
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

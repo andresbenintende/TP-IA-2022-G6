@@ -10,23 +10,27 @@ import javax.swing.JPanel;
 import java.awt.*;
 
 
-public class VentanaJuego extends JFrame {
+public class VentanaJuego extends JFrame{
 
     private final Font fuente = new Font("Niagaraphobia", Font.PLAIN, 22);
+    private final Font fuenteEstrategia = new Font("Niagaraphobia", Font.PLAIN, 40);
     private final Font fuenteGrande = new Font("Niagaraphobia", Font.ITALIC, 60);
+
+    String estrategia;
 
     JPanel panelPrincipal = new JPanel();
 
-    public VentanaJuego(EstadoAmbiente estadoAmbiente) {
-        iniciarVentana(estadoAmbiente);
+    public VentanaJuego(EstadoAmbiente estadoAmbiente, String estrategiaBusqueda) {
+        iniciarVentana(estadoAmbiente, estrategiaBusqueda);
     }
 
-    public void iniciarVentana(EstadoAmbiente estadoAmbiente) {
+    public void iniciarVentana(EstadoAmbiente estadoAmbiente, String estrategiaBusqueda) {
 
         panelPrincipal = new JPanel();
         panelPrincipal.setBounds(0, 0, 1167, 500);
         panelPrincipal.setLayout(null);
 
+        estrategia = estrategiaBusqueda;
 
         estadoAmbiente.getZombies().forEach(zombie -> {
             JLabel zombieLabel = new JLabel();
@@ -96,10 +100,15 @@ public class VentanaJuego extends JFrame {
         cantZombiesValue.setFont(fuente);
         cantZombiesValue.setBounds(240, 520, 60, 60);
 
+        JLabel estratBusqLabel = new JLabel("Estrategia: "+estrategia);
+        estratBusqLabel.setFont(fuenteEstrategia);
+        estratBusqLabel.setBounds(350,500,500,100);
+
         panelPrincipal.add(solesPlantaLabel);
         panelPrincipal.add(solesPlantaValue);
         panelPrincipal.add(cantZombiesLabel);
         panelPrincipal.add(cantZombiesValue);
+        panelPrincipal.add(estratBusqLabel);
 
 
         //Tablero
@@ -131,6 +140,7 @@ public class VentanaJuego extends JFrame {
         this.setSize(1167, 630);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.repaint();
     }
 
 
@@ -156,10 +166,10 @@ public class VentanaJuego extends JFrame {
                 exitoShadowLabel.setBounds(2, 252, 1167, 100);
 
                 JLabel planta = new JLabel();
-                ImageIcon plantaIcon = new ImageIcon("src/UI/img/planta.gif");
+                ImageIcon plantaIcon = new ImageIcon("src/UI/img/plantaExito.gif");
 
                 planta.setIcon(new ImageIcon(plantaIcon.getImage().getScaledInstance(140, 160, 0)));
-                planta.setBounds(250, 250, 140, 160);
+                planta.setBounds(350, 330, 140, 160);
 
 
                 panelPrincipal.add(planta);
@@ -183,10 +193,10 @@ public class VentanaJuego extends JFrame {
                 panelPrincipal.add(fracasoShadowLabel);
 
                 JLabel planta = new JLabel();
-                ImageIcon plantaIcon = new ImageIcon("src/UI/img/planta.gif");
+                ImageIcon plantaIcon = new ImageIcon("src/UI/img/plantaFracaso.gif");
 
                 planta.setIcon(new ImageIcon(plantaIcon.getImage().getScaledInstance(140, 160, 0)));
-                planta.setBounds(400, 275, 140, 160);
+                planta.setBounds(350, 330, 140, 160);
 
 
                 panelPrincipal.add(planta);
@@ -196,9 +206,9 @@ public class VentanaJuego extends JFrame {
 
         //Zombies
         estadoAmbiente.getZombies().forEach(zombie -> {
-
             JLabel zombieLabel = new JLabel();
             ImageIcon zombieIcon = new ImageIcon("src/UI/img/zombies/zombie1.png");
+            ImageIcon zombieBoxIcon = new ImageIcon("src/UI/img/zombieBox.png");
             switch ((zombie.getPoder())) {
 
                 case -1:
@@ -221,6 +231,17 @@ public class VentanaJuego extends JFrame {
             zombieLabel.setIcon(new ImageIcon(zombieIcon.getImage().getScaledInstance(70, 80, 0)));
             zombieLabel.setBounds(205 + (zombie.getPosicion().getColumna() - 1) * 70, 80*(zombie.getPosicion().getFila()) -5, 70, 80);
 
+            JLabel poderZombieFondo = new JLabel();
+            poderZombieFondo.setIcon(new ImageIcon(zombieBoxIcon.getImage().getScaledInstance(25, 25, 0)));
+            poderZombieFondo.setBounds(255 + (zombie.getPosicion().getColumna() - 1)*70, 80 * (zombie.getPosicion().getFila()) + 43, 25, 25);
+
+            JLabel poderZombieLabel = new JLabel(String.valueOf(zombie.getPoder()),SwingConstants.RIGHT);
+            poderZombieLabel.setFont(fuente);
+            poderZombieLabel.setForeground(Color.white);
+            poderZombieLabel.setBounds(235 + (zombie.getPosicion().getColumna() - 1)*70, 80 * (zombie.getPosicion().getFila()) + 45, 40, 25);
+
+            panelPrincipal.add((poderZombieLabel));
+            panelPrincipal.add((poderZombieFondo));
             panelPrincipal.add(zombieLabel);
 
         });
@@ -240,9 +261,13 @@ public class VentanaJuego extends JFrame {
         estadoAmbiente.getGirasoles().forEach((g) -> {
             JLabel girasol = new JLabel();
             ImageIcon girasolIcon = new ImageIcon("src/UI/img/girasol.gif");
-
+            ImageIcon solesBoxIcon = new ImageIcon("src/UI/img/solesBox.png");
             girasol.setIcon(new ImageIcon(girasolIcon.getImage().getScaledInstance(70, 80, 0)));
             girasol.setBounds(205 + (g.getPosicion().getColumna() - 1)*70, 80 * (g.getPosicion().getFila()) -5, 70, 80);
+
+            JLabel solesGirasolFondo = new JLabel();
+            solesGirasolFondo.setIcon(new ImageIcon(solesBoxIcon.getImage().getScaledInstance(25, 25, 0)));
+            solesGirasolFondo.setBounds(255 + (g.getPosicion().getColumna() - 1)*70, 80 * (g.getPosicion().getFila()) + 43, 25, 25);
 
             JLabel solesGirasol = new JLabel(String.valueOf(g.getCantSoles()),SwingConstants.RIGHT);
             solesGirasol.setFont(fuente);
@@ -250,6 +275,7 @@ public class VentanaJuego extends JFrame {
             solesGirasol.setBounds(235 + (g.getPosicion().getColumna() - 1)*70, 80 * (g.getPosicion().getFila()) + 45, 40, 25);
 
             panelPrincipal.add((solesGirasol));
+            panelPrincipal.add((solesGirasolFondo));
             panelPrincipal.add(girasol);
 
         });
@@ -279,10 +305,16 @@ public class VentanaJuego extends JFrame {
         cantZombiesValue.setFont(fuente);
         cantZombiesValue.setBounds(240, 20, 60, 60);
 
+        JLabel estratBusqLabel = new JLabel("Estrategia: "+estrategia);
+        estratBusqLabel.setFont(fuenteEstrategia);
+        estratBusqLabel.setBounds(350,0,500,100);
+
+
         otroPanel.add(solesPlantaLabel);
         otroPanel.add(solesPlantaValue);
         otroPanel.add(cantZombiesLabel);
         otroPanel.add(cantZombiesValue);
+        otroPanel.add(estratBusqLabel);
 
         //FONDO
         JLabel fondo = new JLabel();
@@ -299,5 +331,4 @@ public class VentanaJuego extends JFrame {
         this.getContentPane().add(panelPrincipal);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
-
 }

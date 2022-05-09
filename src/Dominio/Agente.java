@@ -1,7 +1,9 @@
 package Dominio;
 
+import Auxiliares.DOMParser;
 import Dominio.Acciones.*;
 import frsf.cidisi.faia.agent.Perception;
+
 import java.util.Vector;
 
 import frsf.cidisi.faia.agent.search.Problem;
@@ -9,12 +11,19 @@ import frsf.cidisi.faia.agent.search.SearchAction;
 import frsf.cidisi.faia.agent.search.SearchBasedAgent;
 import frsf.cidisi.faia.agent.Action;
 import frsf.cidisi.faia.solver.search.*;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Agente extends SearchBasedAgent {
 
+    Search busquedaSolver;
+    int estrategia;
+
     public Agente() {
+
+        DOMParser parser = new DOMParser();
+        setEstrategiaBusqueda(parser.estrategiaBusquedaParser());
 
         // Prueba de meta del agente
         AgenteGoal goal = new AgenteGoal();
@@ -42,42 +51,6 @@ public class Agente extends SearchBasedAgent {
      */
     @Override
     public Action selectAction() {
-
-        // Creación de la estrategia de búsqueda
-
-     //Búsqueda en profundidad
-        // Búsqueda A*:
-          IStepCostFunction costo = new FuncionCosto();
-         IEstimatedCostFunction heurística = new Heuristica();
-          AStarSearch estrategia = new AStarSearch(costo, heurística);
-        /**
-         * Estrategias de búsqueda:
-         *
-         * Búsqueda en profundidad
-         * DepthFirstSearch estrategia = new DepthFirstSearch();
-         *
-         * Búsqueda en anchura:
-         * BreathFirstSearch estrategia = new BreathFirstSearch();
-         *
-         * Búsqueda de Costo Uniforme:
-         * IStepCostFunction costo = new CostFunction();
-         * UniformCostSearch estrategia = new UniformCostSearch(costo);
-         *
-         * Búsqueda A*:
-         * IStepCostFunction costo = new CostFunction();
-         * IEstimatedCostFunction heurística = new Heuristic();
-         * AStarSearch estrategia = new AStarSearch(costo, heurística);
-         *
-         * Greedy Search:
-         * IEstimatedCostFunction heurística = new Heuristica();
-         * GreedySearch estrategia = new GreedySearch(heurística);
-         */
-
-        // Crea un objeto del tipo Search con la estrategia elegida
-        Search busquedaSolver = new Search(estrategia);
-
-        /* Genera un archivo XML con el árbol de búsqueda.
-         * También puede generarse en PDF usando PDF_TREE */
         busquedaSolver.setVisibleTree(Search.EFAIA_TREE);
 
         // Configura el solucionador de problemas
@@ -90,7 +63,6 @@ public class Agente extends SearchBasedAgent {
         } catch (Exception ex) {
             Logger.getLogger(Agente.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         // Devuelve la acción seleccionada
         return selectedAction;
     }
@@ -98,11 +70,57 @@ public class Agente extends SearchBasedAgent {
     /**
      * Este método es ejecutado por el simulador para brindar una percepción al agente
      * Luego actualiza su estado.
+     *
      * @param p
      */
     @Override
     public void see(Perception p) {
         this.getAgentState().updateState(p);
     }
-}
 
+    public void setEstrategiaBusqueda(int indexEstrategia) {
+        estrategia = indexEstrategia;
+        switch (indexEstrategia) {
+            case 0:
+                DepthFirstSearch e1 = new DepthFirstSearch();
+                busquedaSolver = new Search(e1);
+                break;
+            case 1:
+                BreathFirstSearch e2 = new BreathFirstSearch();
+                busquedaSolver = new Search(e2);
+                break;
+            case 2:
+                IStepCostFunction c1 = new FuncionCosto();
+                UniformCostSearch e3 = new UniformCostSearch(c1);
+                busquedaSolver = new Search(e3);
+            case 3:
+                IStepCostFunction c2 = new FuncionCosto();
+                IEstimatedCostFunction h1 = new Heuristica();
+                AStarSearch e4 = new AStarSearch(c2, h1);
+                busquedaSolver = new Search(e4);
+                break;
+            case 4:
+                IEstimatedCostFunction h2 = new Heuristica();
+                GreedySearch e5 = new GreedySearch(h2);
+                busquedaSolver = new Search(e5);
+                break;
+        }
+    }
+
+    public String getEstrategiaBusqueda() {
+        switch (estrategia) {
+            case 0:
+                return "Busqueda en Profundidad";
+            case 1:
+                return "Busqueda en Anchura";
+            case 2:
+                return "Busqueda de Costo Fijo";
+            case 3:
+                return "Busqueda A*";
+            case 4:
+                return "Busqueda Avara";
+            default:
+                return "Sin Información";
+        }
+    }
+}

@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><estadoAmbienteXML><aleatorio>false</aleatorio><SolesPlanta>7</SolesPlanta><Zombie id="1"><Posicion><fila>4</fila><columna>4</columna></Posicion><poderZombie>-2</poderZombie></Zombie><Zombie id="2"><Posicion><fila>4</fila><columna>4</columna></Posicion><poderZombie>-3</poderZombie></Zombie></estadoAmbienteXML>

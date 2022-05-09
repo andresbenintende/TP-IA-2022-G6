@@ -18,7 +18,7 @@ import frsf.cidisi.faia.state.AgentState;
 import java.util.Arrays;
 import java.util.Vector;
 
-public class Simulador extends SimuladorAbstract {
+public class Simulador extends SimuladorAbstract{
 
     public Simulador(Environment environment, Vector<Agent> agents) {
         super(environment, agents);
@@ -46,7 +46,7 @@ public class Simulador extends SimuladorAbstract {
 
     @Override
     public String getSimulatorName() {
-        return "Simulador Basado en Búsqueda - Grupo 6 IA 2022";
+        return "Simulador Basado en Busqueda - Grupo 6 IA 2022";
     }
 
     void showSolution() {

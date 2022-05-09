@@ -1,6 +1,8 @@
 package Dominio;
 
+import java.awt.desktop.SystemSleepListener;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import UI.VentanaJuego;
 import frsf.cidisi.faia.agent.GoalBasedAgent;
@@ -12,18 +14,24 @@ import frsf.cidisi.faia.simulator.Simulator;
 import frsf.cidisi.faia.simulator.events.EventType;
 import frsf.cidisi.faia.simulator.events.SimulatorEventNotifier;
 
-public abstract class SimuladorAbstract extends Simulator {
+public abstract class SimuladorAbstract extends Simulator{
 
     /**
      *
      * @param environment
      */
 
-    VentanaJuego ventanaJuego;
+    private VentanaJuego ventanaJuego;
+
+    public VentanaJuego getVentanaJuego(){
+        return this.ventanaJuego;
+    }
+
     public SimuladorAbstract(Environment environment, Vector<Agent> agents) {
         super(environment, agents);
-
-        ventanaJuego = new VentanaJuego((EstadoAmbiente) environment.getEnvironmentState());
+        Agente ags = (Agente) agents.elementAt(0);
+        String estrategiaBusq = ags.getEstrategiaBusqueda();
+        ventanaJuego = new VentanaJuego((EstadoAmbiente) environment.getEnvironmentState(), estrategiaBusq);
         ventanaJuego.setVisible(true);
     }
 
@@ -36,7 +44,7 @@ public abstract class SimuladorAbstract extends Simulator {
     }
 
     @Override
-    public void start() {
+    public void start(){
 
         System.out.println("----------------------------------------------------");
         System.out.println("--- " + this.getSimulatorName() + " ---");
@@ -62,6 +70,16 @@ public abstract class SimuladorAbstract extends Simulator {
             System.out.println("Enviando percepcion al agente...");
             perception = this.getPercept();
             agent.see(perception);
+
+            ventanaJuego.actualizar((EstadoAmbiente) environment.getEnvironmentState(), null);
+            ventanaJuego.setVisible(true);
+
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             System.out.println("Percepcion: " + perception);
 
             System.out.println("Estado del Agente: " + agent.getAgentState());
@@ -80,7 +98,7 @@ public abstract class SimuladorAbstract extends Simulator {
             this.actionReturned(agent, action);
 
             ventanaJuego.actualizar((EstadoAmbiente) environment.getEnvironmentState(), null);
-            ventanaJuego.repaint();
+            ventanaJuego.setVisible(true);
 
         } while (!this.agentSucceeded(action) && !this.agentFailed(action));
 
